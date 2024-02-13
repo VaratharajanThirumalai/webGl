@@ -15,14 +15,25 @@
     <script>
         const canvas = new fabric.Canvas('c');
         let cubeSize = 100;
-        let rect = new fabric.Rect({
-            left: 250,
-            top: 150,
-            fill: 'blue',
-            width: cubeSize,
-            height: cubeSize,
-            angle: 360
-        });
+        function Rectangle(left,top,fill,width,height,angle) {
+            let rect = new fabric.Rect({
+            left: left,
+            top: top,
+            fill: fill,
+            width: width,
+            height: height,
+            angle: angle
+            })
+        }
+        Rectangle(250,150,'blue',cubeSize,cubeSize,360)
+        // let rect = new fabric.Rect({
+        //     left: 250,
+        //     top: 150,
+        //     fill: 'blue',
+        //     width: cubeSize,
+        //     height: cubeSize,
+        //     angle: 360
+        // });
         let circle = new fabric.Circle({
             left: 400,
             top: 150,
@@ -36,10 +47,10 @@
             width: cubeSize,
             height: cubeSize,
         });
-        rect.set({ left: 640, top: 10 });
+        // rect.set({ left: 640, top: 10 });
         triangle.set({ left: 500, top: 10 });
         circle.set({ left: 340, top: 10 });
-        canvas.add(rect, triangle, circle);//
+        // canvas.add(rect, triangle, circle);//
 
         //gradient
         function gradient(shapes) {

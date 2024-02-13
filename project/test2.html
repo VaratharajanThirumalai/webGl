@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plane with Polygons and Edge Points</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="webgl-canvas" width="2600" height="1300"></canvas>
+
+    <script src="./gl-matrix_2.4.0_gl-matrix.js"></script>
+    <script>
+        const canvas = document.getElementById('webgl-canvas');
+        const gl = canvas.getContext('webgl');
+
+        const vertexShaderSource = `
+            attribute vec4 a_position;
+            attribute vec3 a_normal;  
+            uniform mat4 u_mvpMatrix;
+            varying vec3 v_normal;  
+            varying vec2 v_textureCoord;
+
+            void main() {
+                gl_Position = u_mvpMatrix * a_position;
+                v_normal = a_normal;  
+                v_textureCoord = a_position.xy * 0.7 + 0.7;
+            }
+        `;
+
+        const fragmentShaderSource = `
+            precision mediump float;
+            uniform vec3 u_color;
+            varying vec3 v_normal;
+            varying vec2 v_textureCoord;
+
+            void main() {
+                vec3 color = abs(v_normal);
+                float gridSize = 0.2;
+                if (mod(v_textureCoord.x, gridSize) < 0.002 || mod(v_textureCoord.y, gridSize) < 0.002) {
+                    color = vec3(0.0, 0.0, 0.0); 
+                }
+                if (mod(v_textureCoord.x, gridSize) < 0.006 && mod(v_textureCoord.y, gridSize) < 0.006) {
+ 
+                  color = vec3(1.0, 1.0, 1.0);
+    }    
+                gl_FragColor = vec4(color, 1.0);
+            }
+        `;
+
+        function compileShader(gl, source, type) {
+            const shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+            return shader;
+        }
+
+        const vertexShader = compileShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
+        const fragmentShader = compileShader(gl, fragmentShaderSource, gl.FRAGMENT_SHADER);
+
+        const program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+        gl.useProgram(program);
+
+        const positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+        const verticesWithNormals = new Float32Array([
+            -0.7, -0.7, 0.0,
+            0.7, -0.7, 0.0,
+            0.7, 0.7, 0.0,
+            -0.7, 0.7, 0.0,
+            0.-7, 7.0, 0.0,
+
+            0.0, 1.0, 1.0,
+            0.0, 0.0, 1.0,
+            1.0, 0.0, 0.0,
+            1.0, 1.0, 0.0,
+            1.0, 0.0, 1.0,
+
+            // bottom edge of the rectangle
+            -0.5, -0.5, 0.0,
+            0.5, -0.5, 0.0,
+            //right edge of the rectangle
+            0.5, -0.5, 0.0,
+            0.5, 0.5, 0.0,
+            //top edge of the rectangle:
+            0.5, 0.5, 0.0,
+            -0.5, 0.5, 0.0,
+            // left edge of the rectangle
+            -0.5, 0.5, 0.0,
+            -0.5, -0.5, 0.0,
+
+        ]);
+
+        gl.bufferData(gl.ARRAY_BUFFER, verticesWithNormals, gl.STATIC_DRAW);
+
+        const positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
+        gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(positionAttributeLocation);
+
+        const normalAttributeLocation = gl.getAttribLocation(program, 'a_normal');
+        gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 4 * 4 * 3);
+        gl.enableVertexAttribArray(normalAttributeLocation);
+
+        const uMvpMatrixLocation = gl.getUniformLocation(program, 'u_mvpMatrix');
+        const uColorLocation = gl.getUniformLocation(program, 'u_color');
+
+        const fov = 45 * Math.PI / 180;
+        const aspect = canvas.width / canvas.height;
+        const near = 0.1;
+        const far = 100.0;
+
+        const projectionMatrix = mat4.perspective(mat4.create(), fov, aspect, near, far);
+        const viewMatrix = mat4.lookAt(mat4.create(), [0, -1.5, .9], [0, 0, 0], [0, 1, 0]);
+        const modelMatrix = mat4.create();
+        const mvpMatrix = mat4.create();
+
+        function draw() {
+            gl.useProgram(program);
+            mat4.fromTranslation(mvpMatrix, [0, 0, 0]);
+            mat4.multiply(mvpMatrix, projectionMatrix, viewMatrix);
+            mat4.multiply(mvpMatrix, mvpMatrix, modelMatrix);
+            gl.uniformMatrix4fv(uMvpMatrixLocation, false, mvpMatrix);
+            gl.uniform3fv(uColorLocation, [0.0, 1.0, 1.0]);
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            gl.drawArrays(gl.LINE_LOOP, 0, 4);
+            gl.drawArrays(gl.LINES, 0, 4);
+            gl.drawArrays(gl.LINES, 4, 4);
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+
+        let isDragging = false;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        let zoomRate = 10;
+        let translationSpeed = 0.01;
+        let translationX = 0;
+        let translationY = 0;
+        let isShiftPressed = false;
+
+        canvas.addEventListener('mousedown', function (event) {
+            isDragging = true;
+            lastMouseX = event.clientX;
+            lastMouseY = event.clientY;
+        });
+
+        canvas.addEventListener('mousemove', function (event) {
+            if (isDragging) {
+                const deltaX = event.clientX - lastMouseX;
+                const deltaY = event.clientY - lastMouseY;
+
+                if (isShiftPressed) {
+                    translationX = deltaX * translationSpeed;
+                    translationY = deltaY * translationSpeed;
+
+                    mat4.translate(modelMatrix, modelMatrix, [translationX, translationY, 0]);
+                } else {
+                    mat4.rotateX(modelMatrix, modelMatrix, deltaY * 0.003);
+                    mat4.rotateY(modelMatrix, modelMatrix, deltaX * 0.003);
+                }
+
+                lastMouseX = event.clientX;
+                lastMouseY = event.clientY;
+            }
+        });
+
+        canvas.addEventListener('mouseup', function () {
+            isDragging = false;
+        });
+
+        canvas.addEventListener('wheel', function (e) {
+            const delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+            mat4.scale(modelMatrix, modelMatrix, [1 + delta * (zoomRate / canvas.height), 1 + delta * (zoomRate / canvas.height), 1]);
+        });
+    </script>
+</body>
+
+</html>

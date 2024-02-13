@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #gridline {
+            background-color: grey;
+        }
+
+        #canvas-container {
+            position: relative;
+        }
+
+        #my-div {
+            position: absolute;
+            padding: 10px;
+        }
+
+        button {
+            border: none;
+            height: 20px;
+            width: 55px;
+        }
+
+        button:hover {
+            background-color: whitesmoke;
+        }
+
+        #images {
+            margin-left: 63rem;
+            margin-top: -57rem;
+        }
+
+        img:hover {
+            border: 5px solid gold;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        canvas {
+            margin: 10px;
+            padding: 10px;
+            display: block;
+        }
+
+        #my-div {
+            margin: 0;
+            padding: 0;
+        }
+
+        .dragged-image {
+            border: 5px solid transparent;
+            margin: 10px;
+        }
+
+        img.draggable {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- <div  style="position: absolute; right:700px; bottom: 700px;"><br><br>
+        Scaling value X : <span id="scaleX"> 1</span><br>
+        Scaling value Y :<span id="scaleY">1</span><br><br>
+        Translate value X:<span id="TranslateX"> 0.0</span><br>
+        Translate value Y:<span id="TranslateY"> 0.0</span><br>
+   </div>    -->
+    <canvas id="gridline" width="1500" height="760" style="background-color:black"></canvas>
+    <script src="./GridLine/gl-matrix_2.4.0_gl-matrix.js"></script>
+    <!-- <script src="./shapes/cube.js"></script>   -->
+    <!-- <script src="./shapes/square.js"></script> -->
+    <!-- <script src="/shapes/circle.js"></script> -->
+    <!-- <script src="./GridLine/orthoMove.js"></script> -->
+<!-- <script src="./shapes/shapes.js"></script> -->
+    <!-- <div id="canvas-container">
+        <canvas id="gridline" width="1000" height="900"></canvas>
+        <div id='my-div'>
+             <button id="start-button">Start</button><br> -->
+    <!-- <button id="delete-button">Delete</button><br> -->
+    <!-- <button id="Copy-button">Copy</button> -->
+    <!-- </div>  -->
+    <!-- <div id="images">
+            <ul>
+                <li><img id="logo" src="Try/js.jpg" alt="mem" width="200" height="200"
+                        style="align-content: right;padding-bottom: 10px; ">
+                </li>
+                <li><img id="logo1" src="./Try/angry bird.png" alt="bird" width="200" height="200"
+                        style="align-content:right ;padding-bottom: 10px; "></li>
+                <li><img id="logo2" src="./Try/logo.png" alt="img" width="200" height="200"
+                        style="align-content:right ;padding-bottom: 10px; "></li>
+                <li><img id="logo3" src="./Try/lion.jpg" alt="img" width="200" height="200"
+                        style="align-content:right ;padding-bottom: 10px; "></li>
+            </ul>
+        </div> -->
+    <!-- </div> -->
+    <script src="project/try.js"></script>
+    <!-- <script src="Try/shapes.js"></script> -->
+    <!-- <script src="./shapes/circle.js"></script> -->
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+The only way to become a clever programmer is to: Practice. Practice. Practice. Code. Code. Code !
+
+27-12-2023   JAVASCRIPT BASIC TOPICS..
+=========== =========================
+
+Date():current india standard time (Format : Wed Dec 27 2023 09:36:02 GMT+0530 (India Standard Time)) ;
+
+Why Study JavaScript?
+JavaScript is one of the 3 languages all web developers must learn:
+
+   1. HTML to define the content of web pages
+
+   2. CSS to specify the layout of web pages
+
+   3. JavaScript to program the behavior of web pages
+
+functions:
+
+   Function is a block of js code,that can be executed 'called' off.
+   For example, a function can be called when an event occurs, like when the user clicks a button. 
+
+String:Javascript strings are primitive and immutable: All string methods produces a new string without altering the original string.
+
+String length :The length property returns the length of a string
+String charAt()
+String charCodeAt()
+String at()
+String [ ]
+String slice()
+String substring()
+String substr()
+String toUpperCase()
+String toLowerCase()
+String concat()
+String trim()
+String trimStart()
+String trimEnd()
+String padStart()
+String padEnd()
+String repeat()
+String replace()
+String replaceAll()
+String split()

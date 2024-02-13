@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>2D Canvas with Draggable and Scalable Shapes</title>
+  <style>
+    #canvas-container {
+      position: relative;
+      padding: auto;
+    }
+
+    #gridline {
+      background-color: rgb(255, 231, 231);
+      border: 5px solid black;
+      padding: 60px;
+      right: -5px;
+    }
+
+    #my-div {
+      position: absolute;
+      padding: 0px;
+      margin: 0;
+    }
+
+    button {
+      border: none;
+      height: 30px;
+      width: 70px;
+      border-radius: 5px;
+      font-size: 18px;
+    }
+
+    button:hover {
+      background-color: rgb(0, 0, 0);
+      color: white;
+      border-radius: 5px;
+      font-size: 18px;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    canvas {
+      margin: 10px;
+      padding: 10px;
+      display: block;
+    }
+
+    .dragged-shape {
+      border: 15px solid transparent;
+      margin: 10px;
+      padding: 3px;
+    }
+
+    li {
+      list-style-type: square;
+      cursor: pointer;
+      padding-left: 20px;
+    }
+
+    h3 {
+      margin: 0;
+      padding: 0;
+    }
+
+    #div {
+      margin-left: 90rem;
+      margin-top: -50rem;
+      padding: 4px;
+      border: 5px solid #000000;
+      overflow-y: scroll;
+      max-height: 900px;
+      position: absolute;
+      width: 300px;
+    }
+
+    canvas {
+      margin-left: 0rem;
+      margin-top: 0rem;
+    }
+
+    #shapes {
+      margin-left: 45rem;
+      width: 160px;
+      text-align: center;
+      font-size: 18px;
+      border-style: groove;
+    }
+
+    .cloned-dragged-element {
+      position: absolute;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container">
+    <div id='my-div'>
+      <button id="delete-button">Delete</button>
+    </div>
+    <canvas id="gridline" width="1300" height="700"></canvas>
+  </div>
+  <div id="div">
+    <h3>Tree View</h3>
+    <ul id="ul" draggable="true"></ul>
+  </div>
+  <div class="drop-down2">
+    <select id="shapes">
+      <option value="0">Shapes</option>
+      <option value="1">Rectangle</option>
+      <option value="2">Circle</option>
+    </select>
+    <button id="button-shapes" onclick="getOutput()">Click</button>
+  </div>
+  <script>
+   const canvas = document.getElementById('gridline');
+    const gl = canvas.getContext('2d');
+    const div = document.getElementById('my-div');
+    const treeView = document.getElementById('ul');
+    const selectElement = document.getElementById('shapes');
+    div.style.display = 'none';
+    const shapes = [];
+    let isDraggingShape = false;
+    let isScalingShape = false;
+    let shapeBeingDragged = null;
+    let shapeBeingScaled = null;
+    let scalingCorner = null;
+    let selectedShape = null;
+    let offsetX = 0;
+    let offsetY = 0;
+    let originalWidth = 0;
+    let originalHeight = 0;
+    let shapeIdCounter = 0;
+
+    function getOutput() {
+      const output = selectElement.value;
+      if (output == 1 || output == 2) {
+        checkType(output);
+        drawDefaultShapes(output);
+      }
+    }
+
+    function drawDefaultShapes(output) {
+    const id = shapeIdCounter++;
+    let treeViewItem;
+    if (output == 1) {
+      const color = 'red';
+      const rectangle = { id, x: 500, y: 300, width: 270, height: 150, color, type: 'rectangle', isOpen: true, children: [], parent: null };
+      treeViewItem = createTreeViewItem(id, 'RECTANGLE');
+      rectangle.treeViewItem = treeViewItem;
+      shapes.push(rectangle);
+    } else if (output == 2) {
+      const color = 'green';
+      const circle = { id, x: 560, y: 300, width: 150, height: 150, color, type: 'circle', isOpen: true, children: [], parent: null };
+      treeViewItem = createTreeViewItem(id, 'CIRCLE');
+      circle.treeViewItem = treeViewItem;
+      shapes.push(circle);
+    }
+    drawCanvas();
+    drawTreeView();
+  }
+  function drawCanvas() {
+gl.clearRect(0, 0, canvas.width, canvas.height);
+shapes.forEach(shape => {
+  gl.fillStyle = shape.color;
+  if (shape.type === 'rectangle') {
+    gl.fillRect(shape.x, shape.y, shape.width, shape.height);
+  } else if (shape.type === 'circle') {
+    gl.beginPath();
+    gl.arc(shape.x + shape.width / 2, shape.y + shape.height / 2, shape.width / 2, 0, 2 * Math.PI);
+    gl.closePath();
+    gl.fill();
+  }
+  // Highlight the selected shape and its children
+  if (shape.isSelected) {
+    gl.strokeStyle = 'transparent';
+    gl.lineWidth = 5;
+    gl.strokeRect(shape.x - 5, shape.y - 5, shape.width + 10, shape.height + 10);
+  }
+});
+  }
+  let  text;
+    function checkType(output) {
+      let div1 = document.createElement("li");
+      div1.draggable = true;
+      div1.id = shapeIdCounter - 1; // Set the ID of the li to match the shape ID
+      if (output == 1) {
+      text = document.createTextNode(`RECTANGLE`);
+      } else if (output == 2) {
+      text = document.createTextNode(`CIRCLE`);
+      };
+      div1.appendChild(text);
+      treeView.appendChild(div1);
+    }
+    function createTree(shapes, parentUl,depth=0,maxDepth=10) {
+    shapes.forEach(shape => {
+      const li = document.createElement("li");
+      li.draggable = true;
+      li.id = shape.id;
+      const text = document.createTextNode(shape.type.toUpperCase());
+      li.appendChild(text);
+      if (depth<maxDepth&&shape.children&&shape.children.length > 0) {
+        const nestedUl = document.createElement("ul");
+        li.appendChild(nestedUl); 
+        // Check if the parentUl is not the same as the nestedUl to avoid infinite recursion
+        if (parentUl !== nestedUl) {
+          createTree(shape.children, nestedUl,depth+1,maxDepth);
+        }
+      }
+      parentUl.appendChild(li);
+    });
+  }
+    function drawTreeView() {
+      const treeView = document.getElementById('ul');
+      treeView.innerHTML = '';
+      createTree(shapes, treeView);
+    }
+    // fix the li item within the tree view box
+    function createTreeViewItem(id, type) {
+    const li = document.createElement("li");
+    li.draggable = true;
+    li.id = id;
+    const text = document.createTextNode(type.toUpperCase());
+    li.appendChild(text);
+    treeView.appendChild(li);
+    return li;
+  }  
+    canvas.addEventListener('mousedown', (e) => {
+      const mouseX = e.clientX - canvas.getBoundingClientRect().left;
+      const mouseY = e.clientY - canvas.getBoundingClientRect().top;
+      shapes.forEach(shape => {
+        if (mouseX >= shape.x && mouseX <= shape.x + shape.width && mouseY >= shape.y && mouseY <= shape.y + shape.height) {
+          if (mouseX >= shape.x + shape.width - 10 && mouseX <= shape.x + shape.width && mouseY >= shape.y + shape.height - 10 && mouseY <= shape.y + shape.height) {
+            isScalingShape = true;
+            shapeBeingScaled = shape;
+            scalingCorner = 'bottom-center';
+            originalWidth = shape.width;
+            originalHeight = shape.height;
+          } else {
+            isDraggingShape = true;
+            shapeBeingDragged = shape;
+            offsetX = mouseX - shape.x;
+            offsetY = mouseY - shape.y;
+          }
+        }
+      });
+    });
+    canvas.addEventListener('mousemove', (e) => {
+  const mouseX = e.clientX - canvas.getBoundingClientRect().left;
+  const mouseY = e.clientY - canvas.getBoundingClientRect().top;
+  if (isDraggingShape) {
+    if (shapeBeingDragged) {
+      const deltaX = mouseX - shapeBeingDragged.x - offsetX;
+      const deltaY = mouseY - shapeBeingDragged.y - offsetY;
+      // Update the position of the parent shape
+      shapeBeingDragged.x = mouseX - offsetX;
+      shapeBeingDragged.y = mouseY - offsetY;
+      // Update the positions of child shapes only if they are children in the tree view
+      updateChildPositions(shapeBeingDragged, deltaX, deltaY);
+    } else if (shapeBeingScaled) {
+      shapeBeingScaled.width = originalWidth + (mouseX - shapeBeingScaled.x - offsetX);
+      shapeBeingScaled.height = originalHeight + (mouseY - shapeBeingScaled.y - offsetY);
+    }
+    drawCanvas();
+  }
+});
+function updateChildPositions(parentShape, deltaX, deltaY) {
+  parentShape.children.forEach(childShape => {
+    // Check if the child is in the tree view as a child of the dragged parent
+    const childElement = document.getElementById(childShape.id.toString());
+    const isChildInView = isElementInDiv(childElement);
+    // Check if the child is not an individual child element
+    const isChildElement = childElement.parentNode !== document.getElementById('ul');
+    if (isChildInView && isChildElement) {
+      // Update the position of each child shape relative to the movement of the parent
+      childShape.x += deltaX;
+      childShape.y += deltaY;
+      // Check if the child has children before making the recursive call
+      if (childShape.children && childShape.children.length > 0) {
+        // Recursive call for child's children
+        updateChildPositions(childShape, deltaX, deltaY);
+      }
+    }
+  });
+}
+    document.addEventListener("dragstart", function (event) {
+      if (event.target.tagName.toLowerCase() === "li") {
+        event.target.style.opacity = 1;
+        event.dataTransfer.setData("text", event.target.id);
+      }
+    });
+    document.addEventListener("dragover", function (event) {
+      event.preventDefault();
+      if (event.target.tagName.toLowerCase() === "li") {
+        event.target.style.border = "1px dashed #000000";
+      }
+    });
+    document.addEventListener("drop", function (event) {
+  event.preventDefault();
+  const data = event.dataTransfer.getData("text");
+  const draggedLi = document.getElementById(data);
+  const targetLi = event.target;
+  const isDropTargetInDiv = isElementInDiv(targetLi);
+  // Check if the drop target is an individual parent element in the tree view
+  const isDropTargetParent = targetLi.tagName.toLowerCase() === "li" && targetLi.childElementCount > 0;
+  if (isDropTargetInDiv) {
+    const parentShapeId = parseInt(targetLi.id);
+    const parentShape = shapes.find(shape => shape.id === parentShapeId);
+    // Check if the dragged element is a child element
+    const isChildElement = targetLi.parentNode !== draggedLi.parentNode;
+    if (isChildElement && isDropTargetParent) {
+      // Remove child functionalities if dropped as an individual parent element
+      parentShape.children = [];
+    } else {
+      // Add the dragged element as a child
+      if (parentShape) {
+        const childShapeId = shapes.find(shape => shape.id === parseInt(data)).id;
+        const childShape = shapes.find(shape => shape.id === childShapeId);
+        if (childShape) {
+          parentShape.children.push(childShape);
+        }
+      }
+    }
+    // Append the dragged element to the drop target
+    targetLi.appendChild(draggedLi);
+  }
+  resetOpacity();
+});
+
+    function isElementInDiv(element) {
+      const divContainer = document.getElementById("div");
+      return divContainer.contains(element);
+    }
+    document.addEventListener("dragend", function () {
+      resetOpacity();
+    });
+
+    function resetOpacity() {
+      const draggableItems = document.querySelectorAll("li");
+      draggableItems.forEach(item => {
+        item.style.opacity = 1;
+        item.style.border = "";
+      });
+    }
+
+    canvas.addEventListener('mouseup', () => {
+      isDraggingShape = false;
+      isScalingShape = false;
+      shapeBeingDragged = null;
+      shapeBeingScaled = null;
+      scalingCorner = null;
+    });
+    treeView.addEventListener('click', (e) => {
+  const shapeId = parseInt(e.target.id);
+  const selectedShape = shapes.find(shape => shape.id === shapeId);
+
+  if (selectedShape) {
+    // Clear previous selection
+    shapes.forEach(shape => (shape.isSelected = false));
+
+    // Mark the selected shape and its children
+    markSelectedAndChildren(selectedShape);
+
+    // Redraw the canvas
+    drawCanvas();
+  }
+});
+
+function markSelectedAndChildren(shape) {
+  // Check if the current shape or its children have already been marked as selected
+  if (shape.isSelected) {
+    return;
+  }
+
+  // Mark the current shape as selected
+  shape.isSelected = true;
+
+  // Recursively mark children
+  shape.children.forEach(childShape => {
+    markSelectedAndChildren(childShape);
+  });
+}
+canvas.addEventListener('click', (e) => {
+  let x = e.clientX - canvas.getBoundingClientRect().left;
+  let y = e.clientY - canvas.getBoundingClientRect().top;
+  
+  // Find the selected shape in the canvas
+  let selectedShapeIndex = -1;
+  shapes.forEach((shape, index) => {
+    if (x >= shape.x && x <= shape.x + shape.width && y >= shape.y && y <= shape.y + shape.height) {
+      selectedShapeIndex = index;
+    }
+  });
+
+  // If a shape is selected, highlight it in the tree view
+  if (selectedShapeIndex !== -1) {
+    const selectedShapeId = shapes[selectedShapeIndex].id;
+    const selectedTreeViewElement = document.getElementById(selectedShapeId);
+
+    // Remove bold styling from all elements in the tree view
+    const treeViewItems = document.querySelectorAll('#ul li');
+    treeViewItems.forEach(item => {
+      item.style.fontWeight = 'normal';
+    });
+
+
+    selectedTreeViewElement.style.fontWeight = 'bold';
+  }
+      if (e.shiftKey) {
+        div.style.left = x + 'px';
+        div.style.top = y + 'px';
+        div.style.display = '';
+      }
+    });
+
+    const deleteButton = document.getElementById('delete-button');
+    deleteButton.addEventListener('click', (e) => {
+      const x = e.clientX - canvas.getBoundingClientRect().left;
+      const y = e.clientY - canvas.getBoundingClientRect().top;
+      let selectedShapeIndex = -1;
+      shapes.forEach((shape, index) => {
+        if (x >= shape.x && x <= shape.x + shape.width && y >= shape.y && y <= shape.y + shape.height) {
+          selectedShapeIndex = index;
+        }
+      });
+      if (selectedShapeIndex !== -1) {
+        const removedShape = treeView.children[selectedShapeIndex];
+        shapes.splice(selectedShapeIndex, 1);
+        drawCanvas();
+        drawTreeView();
+        treeView.removeChild(removedShape);
+      }
+      div.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

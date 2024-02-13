@@ -1,0 +1,466 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebGL Example</title>
+</head>
+
+<body>
+  <script type="module">
+    console.clear();
+    import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.127.0/build/three.module.js";
+    import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.127.0/examples/jsm/controls/OrbitControls.js";
+    import { GUI } from "https://cdn.jsdelivr.net/npm/three@0.127.0/examples/jsm/libs/dat.gui.module.js";
+
+    let scene = new THREE.Scene();
+    let camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 1, 1000);
+    camera.position.set(0, 7, 11).setLength(50);
+    let renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.setClearColor(0x202020);
+    document.body.appendChild(renderer.domElement);
+
+    let controls = new OrbitControls(camera, renderer.domElement);
+
+    let uniforms = {
+      spherePosition: { value: new THREE.Vector3() },
+      radius: { value: 3 },
+      planeHeight: { value: 4 }, // Set planeHeight to 0 to keep it always bent
+      bendHeight: { value: 0.3 },
+      smoothness: { value: 20 }
+    }
+
+    let gs = new THREE.IcosahedronGeometry(1, 7);
+    let c1 = new THREE.Color(0x00ffff);
+    let c2 = new THREE.Color(0xff00ff);
+    let c = new THREE.Color();
+    let clrs = [];
+    for (let i = 0; i < gs.attributes.position.count; i++) {
+      c.lerpColors(c1, c2, (1 - gs.attributes.position.getY(i)) / 2);
+      clrs.push(c.r, c.g, c.b);
+    }
+    gs.setAttribute("color", new THREE.Float32BufferAttribute(clrs, 3));
+
+    let ms = new THREE.PointsMaterial({
+      size: 0.3,
+      vertexColors: true,
+      onBeforeCompile: shader => {
+        shader.fragmentShader = shader.fragmentShader.replace(
+          `#include <clipping_planes_fragment>`, `
+        if (length(gl_PointCoord - 0.5) > 0.5 ) discard; // make points round
+        #include <clipping_planes_fragment>   `
+        );
+      }
+    });
+    let s = new THREE.Points(gs, ms);
+    s.scale.setScalar(uniforms.radius.value);
+    s.userData = {
+      posPrev: new THREE.Vector3(),
+      posNext: new THREE.Vector3(),
+      rotAxis: new THREE.Vector3(),
+      dist: new THREE.Vector3(),
+    }
+    setPosition(s.userData.posPrev, 0);
+    scene.add(s)
+    let gpl = new THREE.PlaneGeometry(40, 40, 100, 100);
+    gpl.rotateX(Math.PI * -0.5);
+    let mpl = new THREE.PointsMaterial({
+      size: 0.1,
+      color: 0xffffff,
+      onBeforeCompile: shader => {
+        shader.uniforms.spherePosition = uniforms.spherePosition;
+        shader.uniforms.radius = uniforms.radius;
+        shader.uniforms.planeHeight = uniforms.planeHeight;
+        shader.uniforms.bendHeight = uniforms.bendHeight;
+        shader.uniforms.smoothness = uniforms.smoothness;
+
+        shader.vertexShader = `
+        uniform vec3 spherePosition;
+        uniform float radius;
+        uniform float planeHeight;
+        uniform float bendHeight;
+        uniform float smoothness;
+        
+        varying float h;
+        
+        float getSphereCone(vec3 p, float h, float r){
+            float dist = length(p.xz - spherePosition.xz);
+            
+            float hratio = -r * h;
+            float limR = sqrt(r * r - hratio * hratio);
+  
+            float res = 0.;
+            if (dist <= limR){
+              res = -sqrt(r * r - dist * dist);
+            }
+            else {
+              res = hratio - (dist - limR) * (limR / hratio);
+            }
+  
+            return res;
+        }
+        
+        vec2 smoothfunc(float a, float b, float k){
+          float h = max(0., min(1., ((b - a) / k) + 0.5));
+          float m = h * (1. - h) * k;
+          return vec2((h * a) + ((1. - h) * b) - (m * 0.5), h);
+        }
+        
+        ${shader.vertexShader}
+      `.replace(
+          `#include <begin_vertex>`,
+          `#include <begin_vertex>
+        
+        float a = planeHeight;
+  
+        float b = getSphereCone(transformed, bendHeight, radius);
+        
+        vec2 res = smoothfunc(a, b, smoothness);
+        transformed.y = res.x;
+        h = res.y;
+        `
+        );
+
+        shader.fragmentShader = `
+        varying float h;
+        ${shader.fragmentShader}
+      `.replace(
+          `vec4 diffuseColor = vec4( diffuse, opacity );`,
+          `
+          vec3 col = mix(vec3(0, 0.5, 1), vec3(1), h);
+          vec4 diffuseColor = vec4( col, opacity );
+        `
+        );
+
+      }
+    });
+    let pl = new THREE.Points(gpl, mpl);
+    scene.add(pl);
+
+    window.addEventListener('resize', onWindowResize);
+    let initialBendPosition = calculateBendPosition();
+
+    // Store the initial bend position in the array
+    let bendPositions = [initialBendPosition.clone()];
+
+    // Create a function to calculate the initial bend position
+    function calculateBendPosition() {
+      return new THREE.Vector3(
+        Math.cos(0.314) * 15,
+        0,
+        -Math.sin(0.27) * 15
+      );
+    }
+    s.position.copy(initialBendPosition);
+    uniforms.planeHeight.value = initialBendPosition.y;
+    let clock = new THREE.Clock();
+
+    let isShiftPressed = false;
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Shift") {
+        isShiftPressed = true;
+      }
+    });
+
+    document.addEventListener("keyup", (event) => {
+      if (event.key === "Shift") {
+        isShiftPressed = false;
+      }
+    });
+    let position = s.position
+    let dummy = new THREE.Vector3(0.2, 0, 0)
+    let dummy2 = new THREE.Vector3(10, 0, 0)
+    document.addEventListener("mousemove", (event) => {
+      if (isShiftPressed) {
+        animateSphere(clock.getElapsedTime());
+        const mouseX = event.clientX / window.innerWidth * 2 - 1;
+        const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        s.position.x = mouseX * 10.0;
+        s.position.y = mouseY * 10.0;
+      }
+    });
+
+    renderer.setAnimationLoop(() => {
+      uniforms.spherePosition.value.copy(dummy2);
+      renderer.render(scene, camera);
+    });
+
+    function animateSphere(t) {
+      let pPrev = s.userData.posPrev;
+      let pNext = s.userData.posNext;
+      let rotAxis = s.userData.rotAxis;
+      let dist = s.userData.dist;
+
+      setPosition(dummy, t);
+      setPosition(pNext, t + 0.01);
+      rotAxis.subVectors(pNext, dummy);
+      rotAxis.set(rotAxis.z, 0, -rotAxis.x).normalize();
+
+      let d = dist.subVectors(dummy, pPrev).length();
+      let dFull = 2 * Math.PI * uniforms.radius.value;
+      let aRatio = d / dFull;
+      let a = Math.PI * 2 * aRatio;
+
+      s.rotateOnWorldAxis(rotAxis, a);
+
+      pPrev.copy(dummy);
+
+    }
+
+    function setPosition(p, t) {
+      p.set(
+        0,//Math.cos(t * 0.314) * 15,
+        0,
+        0,//-Math.sin(t * 0.27) * 15
+      )
+    }
+
+    function onWindowResize() {
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+    }
+  </script>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebGL Example</title>
+</head>
+
+<body>
+  <!-- <canvas id="webglCanvas" width="1600" height="900"></canvas> -->
+  <!-- <script src="./gl-matrix_2.4.0_gl-matrix.js"></script> -->
+  <script type="module">
+    // const canvas = document.getElementById("webglCanvas");
+    // const gl = canvas.getContext('webgl');
+    console.clear();
+    import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.127.0/build/three.module.js";
+    import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.127.0/examples/jsm/controls/OrbitControls.js";
+    import { GUI } from "https://cdn.jsdelivr.net/npm/three@0.127.0/examples/jsm/libs/dat.gui.module.js";
+
+    let scene = new THREE.Scene();
+    let camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 1, 1000);
+    camera.position.set(-2, 3, 13).setLength(50);
+    let renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.setClearColor(0x202020);
+    document.body.appendChild(renderer.domElement);
+
+    let controls = new OrbitControls(camera, renderer.domElement);
+
+    let uniforms = {
+      spherePosition: { value: new THREE.Vector3() },
+      radius: { value: 5 },
+      planeHeight: { value: 4 },
+      bendHeight: { value: 0.85 }, // of radius [0..1],
+      smoothness: { value: 20 }
+    }
+
+
+    let gs = new THREE.IcosahedronGeometry(1, 10);
+    let c1 = new THREE.Color(0x00fff);
+    let c2 = new THREE.Color(0x00ffff);
+    let c = new THREE.Color();
+    let clrs = [];
+    for (let i = 0; i < gs.attributes.position.count; i++) {
+      c.lerpColors(c1, c2, (1 - gs.attributes.position.getY(i)) / 2);
+      clrs.push(c.r, c.g, c.b);
+    }
+    gs.setAttribute("color", new THREE.Float32BufferAttribute(clrs, 3));
+
+    let ms = new THREE.PointsMaterial({
+      size: 0.2,
+      vertexColors: true,
+      onBeforeCompile: shader => {
+        shader.fragmentShader = shader.fragmentShader.replace(
+          `#include <clipping_planes_fragment>`, `
+      if (length(gl_PointCoord - 0.5) > 0.5 ) discard; // make points round
+      #include <clipping_planes_fragment>   `
+        );
+      }
+    });
+    let s = new THREE.Points(gs, ms);
+    // console.log(s);
+    s.scale.setScalar(uniforms.radius.value);
+    s.userData = {
+      posPrev: new THREE.Vector3(),
+      posNext: new THREE.Vector3(),
+      rotAxis: new THREE.Vector3(),
+      dist: new THREE.Vector3(),
+
+    }
+    setPosition(s.userData.posPrev, 0);
+    scene.add(s)
+
+    let plane = new THREE.PlaneGeometry(40, 40, 100, 100);
+    plane.rotateX(Math.PI * -0.5);
+    let mpl = new THREE.PointsMaterial({
+      size: 0.1,
+      color: 0xffffff,
+      onBeforeCompile: shader => {
+        shader.uniforms.spherePosition = uniforms.spherePosition;
+        shader.uniforms.radius = uniforms.radius;
+        shader.uniforms.planeHeight = uniforms.planeHeight;
+        shader.uniforms.bendHeight = uniforms.bendHeight;
+        shader.uniforms.smoothness = uniforms.smoothness;
+
+        shader.vertexShader = `
+      uniform vec3 spherePosition;
+      uniform float radius;
+      uniform float planeHeight;
+      uniform float bendHeight;
+      uniform float smoothness;
+      
+      varying float h;
+      
+      float getSphereCone(vec3 p, float h, float r){
+            float dist = length(p.xz - spherePosition.xz);
+          
+          float hratio = -r * h;
+          float limR = sqrt(r * r - hratio * hratio);
+
+          float res = 0.;
+          if (dist <= limR){
+            res = -sqrt(r * r - dist * dist);
+          }
+          else {
+            res = hratio - (dist - limR) * (limR / hratio);
+          }
+
+          return res;
+      }
+      
+      vec2 smoothfunc(float a, float b, float k){
+        float h = max(0., min(1., ((b - a) / k) + 0.5));
+        float m = h * (1. - h) * k;
+        return vec2((h * a) + ((1. - h) * b) - (m * 0.5), h);
+      }
+      
+      ${shader.vertexShader}
+    `.replace(
+          `#include <begin_vertex>`,
+          `#include <begin_vertex>
+      
+      float a = planeHeight;
+
+      float b = getSphereCone(transformed, bendHeight, radius);
+      
+      vec2 res = smoothfunc(a, b, smoothness);
+      transformed.y = res.x;
+      h = res.y;
+      `
+        );
+
+        shader.fragmentShader = `
+      varying float h;
+      ${shader.fragmentShader}
+    `.replace(
+          `vec4 diffuseColor = vec4( diffuse, opacity );`,
+          `
+        vec3 col = mix(vec3(0, 0.5, 1), vec3(1), h);
+        vec4 diffuseColor = vec4( col, opacity );
+      `
+        );
+  
+      }
+    });
+    let pl = new THREE.Points(plane, mpl);
+    scene.add(pl);
+
+    window.addEventListener('resize', onWindowResize);
+
+    let clock = new THREE.Clock();
+
+    let isShiftPressed = false;
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Shift") {
+        isShiftPressed = true;
+      }
+    });
+
+    document.addEventListener("keyup", (event) => {
+      if (event.key === "Shift") {
+        isShiftPressed = false;
+      }
+    });
+
+    // let empty = []
+    let position = s.position
+    let dummy = new THREE.Vector3(10, 0, 0)
+    document.addEventListener("mousemove", (event) => {
+      if (isShiftPressed) {
+        animateSphere(clock.getElapsedTime());
+
+        const mouseX = event.clientX / window.innerWidth * 2 - 1;
+        const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        s.position.x = mouseX * 10;
+        s.position.y = mouseY * 10;
+      // console.log(empty);
+      }
+    });
+
+    renderer.setAnimationLoop(() => {
+      uniforms.spherePosition.value.copy(dummy);
+      // empty.push(position.x)
+      // empty.push(position.y)
+      // empty.push(position.z)
+      // console.log('position: ', position.x);
+      renderer.render(scene, camera);
+    });
+
+
+    function animateSphere(t) {
+
+      let pPrev = s.userData.posPrev;
+      let pNext = s.userData.posNext;
+      let rotAxis = s.userData.rotAxis;
+      let dist = s.userData.dist;
+      // console.log(uniforms.spherePosition);
+      setPosition(dummy, t);
+      console.log(dummy);
+      setPosition(pNext, t + 0.001);
+      rotAxis.subVectors(pNext, dummy);
+      rotAxis.set(rotAxis.z, 0, -rotAxis.x).normalize();
+
+
+      let d = dist.subVectors(dummy, pPrev).length();
+      let dFull = 2 * Math.PI * uniforms.radius.value;
+      let aRatio = d / dFull;
+      let a = Math.PI * 2 * aRatio;
+
+      s.rotateOnWorldAxis(rotAxis, a);
+
+      pPrev.copy(dummy);
+
+    }
+
+    function setPosition(p, t) {
+      p.set(
+        0,//Math.cos(t * 0.314) * 15
+        0,
+        0//-Math.sin(t * 0.27) * 15
+      )
+    }
+    function onWindowResize() {
+  
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+
+}
+  </script>
+</body>
+
+</html>

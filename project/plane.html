@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGL Example</title>
+</head>
+<body>
+    <canvas id="webglCanvas" width="1900" height="800"></canvas>
+    <script src="./gl-matrix_2.4.0_gl-matrix.js"></script>
+    <script>
+        const canvas = document.getElementById("webglCanvas");
+        const gl = canvas.getContext('webgl');
+        const vertexShaderSource = `
+        precision mediump float;
+        attribute vec2 a_position;
+        uniform mat4 uModelViewMatrix;
+        uniform mat4 uProjectionMatrix;
+        void main() {
+            gl_Position = uProjectionMatrix *uModelViewMatrix* vec4(a_position,0.0, 1.0);
+        }
+        `;
+        const fragmentShaderSource = `
+        precision mediump float;
+        void main() {
+            gl_FragColor = vec4(1.0, 1.0, 1.0, 0.0);
+        }
+        `;
+        function generateVertices(widthSegments, heightSegments) {
+            let vertices = [];
+            const stepX = 2 / widthSegments;
+            const stepY = 2 / heightSegments;
+            for (let y = -1; y < 1; y += stepY) {
+                for (let x = -1; x < 1; x += stepX) {
+                    vertices.push(x, y);
+                    vertices.push(x + stepX, y);
+                    vertices.push(x + stepX, y + stepY);
+                    vertices.push(x, y + stepY);
+                    vertices.push(x, y);
+                    vertices.push(x + stepX, y);
+                    vertices.push(x, y + stepY);
+                }
+            }
+            let vertexData = vertices;
+            let VerticesData = [];
+            let Empty = [];
+            for (let i = 0; i < vertexData.length; i++) {
+                if (vertexData[i] < 0) {
+                    VerticesData = vertexData[i] * 3.5;
+                } else if (vertexData[i] > 0) {
+                    VerticesData = vertexData[i] * 3.5;
+                } else {
+                    VerticesData = vertexData[i];
+                }
+                Empty.push(VerticesData);
+            }
+            return Empty;
+        }
+        let vertices = generateVertices(7, 7);
+        vertexBuffer(vertices);
+        const vertexSource = vertexShader(vertexShaderSource);
+        const fragmentSource = fragmentShader(fragmentShaderSource);
+        const shaderprogram = shaderProgram(vertexSource, fragmentSource);
+        positionLocation(shaderprogram,'a_position');
+        const projectionMatrix = mat4.create();
+        const modelViewMatrix = mat4.create();
+        mat4.perspective(projectionMatrix, Math.PI / 4, canvas.clientWidth / canvas.clientHeight, 0.1, 100.0);
+        mat4.lookAt(modelViewMatrix, [0, -7, 2], [0, 0, 0], [0, 1, 1]);
+        function draw() {
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            uniformLocation(shaderprogram,modelViewMatrix,'uModelViewMatrix');
+            uniformLocation(shaderprogram,projectionMatrix,'uProjectionMatrix');
+            gl.drawArrays(gl.LINE_STRIP, 0, vertices.length / 2);
+        }
+        draw();
+        //functions
+        function uniformLocation(shaderLocation,Matrix,location) {
+            let MatrixLocation = gl.getUniformLocation(shaderLocation,location );
+            gl.uniformMatrix4fv(MatrixLocation, false, Matrix);
+            return MatrixLocation;
+        }
+        function positionLocation(shaderLocation,location) {
+            const positionAttributeLocation = gl.getAttribLocation(shaderLocation, location);
+            gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+            gl.enableVertexAttribArray(positionAttributeLocation);
+        }
+        function vertexBuffer(vertices) {
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        }
+        function vertexShader(source) {
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, source);
+            gl.compileShader(vertexShader);
+            return vertexShader;
+        }
+        function fragmentShader(source) {
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, source);
+            gl.compileShader(fragmentShader);
+            return fragmentShader;
+        }
+        function shaderProgram(vertex, fragment) {
+            const shaderProgram = gl.createProgram();
+            gl.attachShader(shaderProgram, vertex);
+            gl.attachShader(shaderProgram, fragment);
+            gl.linkProgram(shaderProgram);
+            gl.useProgram(shaderProgram);
+            return shaderProgram;
+        }
+    </script>
+</body>
+
+</html>

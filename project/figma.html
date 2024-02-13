@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>2D Canvas with Draggable and Scalable Shapes</title>
+    <style>
+        #canvas-container {
+            position: relative;
+            padding: auto;
+        }
+
+        #gridline {
+            background-color: gainsboro;
+            border: 5px solid black;
+            padding: 60px;
+            right: -5px;
+        }
+
+        #my-div {
+            position: absolute;
+            margin: 0;
+            padding: 0;
+            width: 70px;
+            height: 40px;
+        }
+
+        button {
+            border: none;
+            height: 30px;
+            width: 70px;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+
+        button:hover {
+            background-color: rgb(0, 0, 0);
+            color: white;
+
+        }
+
+        body,
+        h2 {
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            list-style-type: square;
+            cursor: pointer;
+        }
+
+        #div {
+            margin-left: 99rem;
+            margin-top: -55rem;
+            padding: 4px;
+            border: 3px solid #000000;
+            overflow-y: scroll;
+            max-height: 900px;
+            position: absolute;
+            width: 300px;
+            background-color: whitesmoke;
+        }
+
+        canvas {
+            margin-left: 0rem;
+            margin-top: 0rem;
+        }
+
+        #shapes {
+            margin-left: 45rem;
+            width: 160px;
+            text-align: center;
+            font-size: 18px;
+            border-style: groove;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="canvas-container">
+        <div id='my-div'>
+            <button id="delete-button">Delete</button>
+        </div>
+        <canvas id="gridline" width="1400" height="750"></canvas>
+    </div>
+    <div id="div">
+        <h3>Tree View</h3>
+        <ul id="tree-view" draggable="true">
+        </ul>
+    </div>
+    <div class="drop-down2">
+        <select id="shapes">
+            <option value="0">Click shapes</option>
+            <option value="1">rectangle</option>
+            <option value="2">triangle</option>
+        </select>
+        <button id="button-shapes" onclick="getOutput()">Create</button>
+    </div>
+    <script>
+        const canvas = document.getElementById('gridline');
+        const gl = canvas.getContext('2d');
+        const div = document.getElementById('my-div');
+        const treeView = document.getElementById('tree-view');
+        const selectElement = document.getElementById('shapes');
+        const shapes = [];
+        let isDraggingShape = false;
+        let isScalingShape = false;
+        let shapeBeingDragged = null;
+        let shapeBeingScaled = null;
+        let scalingCorner = null;
+        let offsetX = 0;
+        let offsetY = 0;
+        let originalWidth = 0;
+        let originalHeight = 0;
+        div.style.display = 'none';
+        function getOutput() {
+            const output = selectElement.value;
+            if (output == 1 || output == 2) {
+                checkType(output)
+                drawDefaultShapes(output);
+            }
+        }
+        function drawDefaultShapes(output) {
+            if (output == 1) {
+                const color = 'red';
+                const rectangle = { x: 10, y: 550, width: 270, height: 150, color, type: 'rectangle' };
+                shapes.push(rectangle);
+            } else if (output == 2) {
+                const color = 'green';
+                const triangle = { x: 300, y: 700, width: 150, height: 150, color, type: 'triangle' };
+                shapes.push(triangle);
+            } 
+            drawCanvas();
+        }
+        let text;
+        function checkType(output) {
+            let div1 = document.createElement("li");
+            div1.draggable = true
+            if (output == 1) {
+                text = document.createTextNode(`RECTANGLE`);
+            } else if (output == 2) {
+                text = document.createTextNode(`TRIANGLE `);
+            };
+            div1.appendChild(text);
+            treeView.appendChild(div1);
+        }
+        function drawCanvas() {
+            gl.clearRect(0, 0, canvas.width, canvas.height);
+            shapes.forEach(shape => {
+                gl.fillStyle = shape.color;
+                if (shape.type === 'rectangle') {
+                    gl.fillRect(shape.x, shape.y, shape.width, shape.height);
+                } else if (shape.type === 'triangle') {
+                    gl.beginPath();
+                    gl.moveTo(shape.x, shape.y);
+                    gl.lineTo(shape.x + shape.width, shape.y);
+                    gl.lineTo(shape.x + shape.width / 2, shape.y - shape.height);
+                    gl.closePath();
+                    gl.fill();
+                }
+            });
+        }
+        canvas.addEventListener('mousedown', (e) => {
+            const mouseX = e.clientX - canvas.getBoundingClientRect().left;
+            const mouseY = e.clientY - canvas.getBoundingClientRect().top;
+            shapes.forEach(shape => {
+                if (mouseX >= shape.x && mouseX <= shape.x + shape.width && mouseY >= shape.y && mouseY <= shape.y + shape.height) {
+                    if (mouseX >= shape.x + shape.width - 10 && mouseX <= shape.x + shape.width && mouseY >= shape.y + shape.height - 10 && mouseY <= shape.y + shape.height) {
+                        isScalingShape = true;
+                        shapeBeingScaled = shape;
+                        scalingCorner = 'bottom-center';
+                        originalWidth = shape.width;
+                        originalHeight = shape.height;
+                    } else {
+                        isDraggingShape = true;
+                        shapeBeingDragged = shape;
+                        offsetX = mouseX - shape.x;
+                        offsetY = mouseY - shape.y;
+                    }
+                }
+            });
+        });
+        canvas.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX - canvas.getBoundingClientRect().left;
+            const mouseY = e.clientY - canvas.getBoundingClientRect().top;
+            if (isDraggingShape && e.ctrlKey) {
+                shapeBeingDragged.x = mouseX - offsetX;
+                shapeBeingDragged.y = mouseY - offsetY;
+            } else if (isScalingShape && e.altKey) {
+                shapeBeingScaled.width = originalWidth + (mouseX - shapeBeingScaled.x - offsetX);
+                shapeBeingScaled.height = originalHeight + (mouseY - shapeBeingScaled.y - offsetY);
+            }
+            drawCanvas();
+        });
+        canvas.addEventListener('mouseup', () => {
+            isDraggingShape = false;
+            isScalingShape = false;
+            shapeBeingDragged = null;
+            shapeBeingScaled = null;
+            scalingCorner = null;
+        });
+        canvas.addEventListener('click', (e) => {
+            let x = e.clientX - canvas.getBoundingClientRect().left;
+            let y = e.clientY - canvas.getBoundingClientRect().top;
+            if (e.shiftKey) {
+                div.style.left = x + 'px';
+                div.style.top = y + 'px';
+                div.style.display = '';
+            }
+        });
+        const deleteButton = document.getElementById('delete-button');
+        deleteButton.addEventListener('click', (e) => {
+            const x = e.clientX - canvas.getBoundingClientRect().left;
+            const y = e.clientY - canvas.getBoundingClientRect().top;
+            let selectedShapeIndex = -1;
+            shapes.forEach((shape, index) => {
+                if (x >= shape.x && x <= shape.x + shape.width && y >= shape.y && y <= shape.y + shape.height) {
+                    selectedShapeIndex = index;
+                }
+            });
+            if (selectedShapeIndex !== -1) {
+                const removedShape = treeView.children[selectedShapeIndex];
+                shapes.splice(selectedShapeIndex, 1);
+                drawCanvas();
+                treeView.removeChild(removedShape);
+            }
+            div.style.display = 'none';
+        });
+    </script>
+</body>
+
+</html>

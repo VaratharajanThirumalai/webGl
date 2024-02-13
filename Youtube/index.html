@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <title>Specular Highlights - Blinn Phong Reflection Model</title>
+</head>
+<body>
+  
+  <script id="vertex-shader" type="x-shader/x-vertex">
+    attribute vec3 position;
+    attribute vec3 normal;
+    
+    uniform mat4 model;
+    uniform mat4 view;
+    uniform mat4 projection;
+    uniform mat3 normalMatrix;
+    
+    varying vec3 vNormal;
+    varying vec3 vPosition;
+    
+    void main() {
+      
+      vNormal = normalMatrix * normal;
+      vPosition = (model * vec4( position, 1.0 )).xyz;
+      
+      gl_Position = projection * view * model * vec4( position, 1.0 );
+    }
+  </script>
+
+  <script id="fragment-shader" type="x-shader/x-fragment">
+    precision mediump float;
+    uniform vec3 cameraPosition;
+    uniform vec4 color;
+    uniform vec4 specularColor;
+    uniform float ambientLight;
+    
+    uniform float specularAmount;
+    uniform float specularShininess;
+    
+    uniform vec3 light;
+    
+    varying vec3 vNormal;
+    varying vec3 vPosition;
+    
+    void main() {
+      vec3 directionToCamera = normalize(cameraPosition - vPosition);
+      vec3 halfwayVector = normalize( directionToCamera + light );
+      float specularBrightness = (pow(max(0.0, dot(vNormal, halfwayVector)),specularShininess));
+      float lightDotProduct = dot( normalize(vNormal), light );
+      float surfaceBrightness = max( 0.0, lightDotProduct );
+      gl_FragColor = vec4(color.xyz * surfaceBrightness + specularColor.xyz * specularBrightness, color.w);
+      
+    }
+  </script>
+    
+  <canvas id="canvas"></canvas>
+  <h1 class='lesson-title'>
+    <a href='../04-lambert-lighting'>&larr;</a>
+    Blinn Phong Lighting Model
+  </h1>
+  
+  <script type='text/javascript' src='bunny-model.js'></script>
+  <script type='text/javascript' src='matrices.js'></script>
+  <script type='text/javascript' src='shaders.js'></script>
+  <script type='text/javascript' src='dat.gui.min.js'></script>
+  <script type='text/javascript' src='script.js'></script>
+  
+  
+</body>
+</html>

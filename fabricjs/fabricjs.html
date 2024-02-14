@@ -15,18 +15,35 @@
     <script>
         const canvas = new fabric.Canvas('c');
         let cubeSize = 100;
-        function Rectangle(left,top,fill,width,height,angle) {
-            let rect = new fabric.Rect({
+        let rect;
+        let circle;
+      
+        function Rect(left,top,fill,width,height,angle,radius) {
+            rect = new fabric.Rect({
             left: left,
             top: top,
-            fill: fill,
+            fill:fill,
             width: width,
             height: height,
             angle: angle
             })
+            canvas.add(rect);
         }
-        Rectangle(250,150,'blue',cubeSize,cubeSize,360)
-        // let rect = new fabric.Rect({
+        Rect(250,150,'blue',cubeSize,cubeSize)
+        Rect(250,650,'red',cubeSize,cubeSize)
+
+        function Circle(left,top,fill,radius) {
+            circle = new fabric.Circle({
+            left: left,
+            top: top,
+            fill: fill,
+            radius: radius,
+        });
+            canvas.add(circle);
+        }
+       
+        Circle(250,450,'green',50)
+        //  rect = new fabric.Rect({
         //     left: 250,
         //     top: 150,
         //     fill: 'blue',
@@ -34,94 +51,94 @@
         //     height: cubeSize,
         //     angle: 360
         // });
-        let circle = new fabric.Circle({
-            left: 400,
-            top: 150,
-            fill: 'red',
-            radius: 60,
-        });
-        let triangle = new fabric.Triangle({
-            left: 550,
-            top: 150,
-            fill: 'pink',
-            width: cubeSize,
-            height: cubeSize,
-        });
+        //  circle = new fabric.Circle({
+        //     left: 400,
+        //     top: 150,
+        //     fill: 'red',
+        //     radius: 60,
+        // });
+        //  triangle = new fabric.Triangle({
+        //     left: 550,
+        //     top: 150,
+        //     fill: 'pink',
+        //     width: cubeSize,
+        //     height: cubeSize,
+        // });
         // rect.set({ left: 640, top: 10 });
-        triangle.set({ left: 500, top: 10 });
-        circle.set({ left: 340, top: 10 });
+        // triangle.set({ left: 500, top: 10 });
+        // circle.set({ left: 340, top: 10 });
         // canvas.add(rect, triangle, circle);//
 
         //gradient
-        function gradient(shapes) {
-            let gradient = new fabric.Gradient({
-                type: 'linear',//radial
-                gradientUnits: ' pixel',
-                //  gradientUnits: 'percentage',
-                coords: { x0: 1, y0: 0, x1: 0, y1: shapes.height },//pixel
-                // coords: { x0: 1, y0: 0, x1: 1, y1: 0 },//percentage
-                colorStops: [{ offset: 0, color: 'red' },
-                { offset: 0.2, color: 'yellow' },
-                { offset: 0.4, color: 'green' },
-                { offset: 0.6, color: 'blue' },
-                { offset: 0.8, color: 'orange' },
-                { offset: 1, color: 'brown' },
-                ]
+        // function gradient(shapes) {
+        //     let gradient = new fabric.Gradient({
+        //         type: 'linear',//radial
+        //         gradientUnits: ' pixel',
+        //         //  gradientUnits: 'percentage',
+        //         coords: { x0: 1, y0: 0, x1: 0, y1: shapes.height },//pixel
+        //         // coords: { x0: 1, y0: 0, x1: 1, y1: 0 },//percentage
+        //         colorStops: [{ offset: 0, color: 'red' },
+        //         { offset: 0.2, color: 'yellow' },
+        //         { offset: 0.4, color: 'green' },
+        //         { offset: 0.6, color: 'blue' },
+        //         { offset: 0.8, color: 'orange' },
+        //         { offset: 1, color: 'brown' },
+        //         ]
 
-            })
-            shapes.set('fill', gradient);
-        }
-        gradient(circle);
-        gradient(rect);
-        // gradient(triangle);
+        //     })
+            // shapes.set('fill', gradient);
+        // }
+        // gradient(circle);
+        // gradient(rect);
+        // // gradient(triangle);
 
 
-        fabric.Image.fromURL("image.jpg", function (img) {
-            img.scale(0.5)
+        // fabric.Image.fromURL("image.jpg", function (img) {
+        //     img.scale(0.5)
             // .set('flipY', true)
             // img.filters.push(new fabric.Image.filters.Grayscale())
-            img.filters.push(new fabric.Image.filters.Sepia(),
-                new fabric.Image.filters.Brightness({ brightness: 0.2 }))
+        //     img.filters.push(new fabric.Image.filters.Sepia(),
+        //         new fabric.Image.filters.Brightness({ brightness: 0.2 }))
 
-            let readish = new fabric.Color('#f55')
-            let greenish = new fabric.Color('#5f5')
-            readish.overlayWith(greenish).toHex();
-            readish.toGrayscale().toHex();
+        //     let readish = new fabric.Color('#f55')
+        //     let greenish = new fabric.Color('#5f5')
+        //     readish.overlayWith(greenish).toHex();
+        //     readish.toGrayscale().toHex();
 
-            img.applyFilters();
+        //     img.applyFilters();
 
-            canvas.add(img);
-            img.animate('angle', '-=0', {
-                onChange: canvas.renderAll.bind(canvas),
-                duration: 1000,
-            })
-            img.animate('top', '+=620', {
-                onChange: canvas.renderAll.bind(canvas),
-                duration: 10000,
-                easing: fabric.util.ease.easeOutBounce
-            })
-        });
+        //     canvas.add(img);
+        //     img.animate('angle', '-=0', {
+        //         onChange: canvas.renderAll.bind(canvas),
+        //         duration: 1000,
+        //     })
+        //     img.animate('top', '+=620', {
+        //         onChange: canvas.renderAll.bind(canvas),
+        //         duration: 10000,
+        //         easing: fabric.util.ease.easeOutBounce
+        //     })
+        // });
 
-        function animate(canva, shapes, direction, degree, dValue) {
-            shapes.animate(direction, degree, {
-                onChange: canva.renderAll.bind(canva),
-                duration: dValue,
-                easing: fabric.util.ease.easeOutBounce,
+        // function animate(canva, shapes, direction, degree, dValue) {
+        //     shapes.animate(direction, degree, {
+        //         onChange: canva.renderAll.bind(canva),
+        //         duration: dValue,
+        //         easing: fabric.util.ease.easeOutBounce,
                 // easing:fabric.util.ease.easeInBounce,
                 // easing:fabric.util.ease.easeOutElastic,
                 // easing:fabric.util.ease.easeInElastic,
                 // easing:fabric.util.ease.easeInCubic,
                 // easing:fabric.util.ease.easeOutCubic,
                 // easing:fabric.util.ease.easeOutExpo,
-            })
-            canvas.renderAll();
-        }
-        animate(canvas, rect, 'angle', '+=360', 10000);
-        animate(canvas, rect, 'top', '+=650', 10000);
-        animate(canvas, triangle, 'angle', '+=360', 10000);
-        animate(canvas, triangle, 'top', '+=650', 10000);
-        animate(canvas, circle, 'angle', '+=360', 10000);
-        animate(canvas, circle, 'top', '+=630', 10000);
+            // })
+            // canvas.renderAll();
+        // }
+        // animate(canvas, rect, 'angle', '+=360', 10000);
+        // animate(canvas, rect, 'top', '+=650', 10000);
+        // animate(canvas, triangle, 'angle', '+=360', 10000);
+        // animate(canvas, triangle, 'top', '+=650', 10000);
+        // animate(canvas, circle, 'angle', '+=360', 10000);
+        // animate(canvas, circle, 'top', '+=630', 10000);
 
 
 
@@ -147,14 +164,14 @@
 
         //text
 
-        let text = new fabric.Text("Hi Vanish",
-            {
-                left: 1000,
-                top: 550,
+        // let text = new fabric.Text("Hi Vanish",
+        //     {
+        //         left: 1000,
+                // top: 550,
                 // fontStyle: 'italic',
                 // fontFamily: "Hoefler Text",
-                fontSize: 70,
-                fontWeight: 'bold',
+                // fontSize: 70,
+                // fontWeight: 'bold',
                 // underline: true,
                 // overline: true,
                 // linethrough: true,
@@ -163,68 +180,68 @@
                 // strokeWidth: 3,
                 // textAlign:'right',//using multilines
                 // lineHeight: 1,//using multilines
-                textBackgroundColor: 'lightGray',
-            });
-        canvas.add(text);
+        //         textBackgroundColor: 'lightGray',
+        //     });
+        // canvas.add(text);
 
         //events
 
-        canvas.on('mouse:down', function (options) {
-            if (options.target) {
-                console.log('an object was clicked! ', options.target.type);
-            }
-        });
+        // canvas.on('mouse:down', function (options) {
+        //     if (options.target) {
+        //         console.log('an object was clicked! ', options.target.type);
+        //     }
+        // });
 
         //group
 
-        var circle1 = new fabric.Circle({
-            radius: 100,
-            fill: 'yellow',
-            scaleY: 0.5,
-            originX: 'center',
-            originY: 'center'
-        });
+        // var circle1 = new fabric.Circle({
+        //     radius: 100,
+        //     fill: 'yellow',
+        //     scaleY: 0.5,
+        //     originX: 'center',
+        //     originY: 'center'
+        // });
 
-        var text1 = new fabric.Text('hello world', {
-            fontSize: 30,
-            originX: 'center',
-            originY: 'center'
-        });
+        // var text1 = new fabric.Text('hello world', {
+        //     fontSize: 30,
+        //     originX: 'center',
+        //     originY: 'center'
+        // });
 
-        var group = new fabric.Group([circle1, text1], {
-            left: 150,
-            top: 100,
-            angle:10
-        });
-        group.item(0).set('fill','red');
-        group.item(1).set({text:'Fabric.js',
-        fill:'white'});
+        // var group = new fabric.Group([circle1, text1], {
+        //     left: 150,
+        //     top: 100,
+        //     angle:10
+        // });
+        // group.item(0).set('fill','red');
+        // group.item(1).set({text:'Fabric.js',
+        // fill:'white'});
 
-        var circle2 = new fabric.Circle({
-            radius: 50,
-            fill: 'yellow',
-           left:100,
-           top:100
-        });
+        // var circle2 = new fabric.Circle({
+        //     radius: 50,
+        //     fill: 'yellow',
+        //    left:100,
+        //    top:100
+        // });
 
-        var circle3 = new fabric.Circle({
-            radius: 50,
-            fill: 'orange',
-            left:175,
-            top:175,
-        });
+        // var circle3 = new fabric.Circle({
+        //     radius: 50,
+        //     fill: 'orange',
+        //     left:175,
+        //     top:175,
+        // });
 
-        var circle4 = new fabric.Circle({
-            radius: 50,
-            fill: 'blue',
-            left:250,
-            top:250,
-        });
+//         var circle4 = new fabric.Circle({
+//             radius: 50,
+//             fill: 'blue',
+//             left:250,
+//             top:250,
+//         });
    
-        canvas.add(group,new fabric.Group([ circle2, circle3, circle4 ], {
-  left: 1000,
-  top: 300
-})); 
+//         canvas.add(group,new fabric.Group([ circle2, circle3, circle4 ], {
+//   left: 1000,
+//   top: 300
+// })); 
     </script>
 </body>
 

@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    <canvas id="canvas" style="background-color: rgb(23, 23, 20);">Your browser does not support HTML5 canvas</canvas>
+    <canvas id="canvas" style="background-color: grey;">Your browser does not support HTML5 canvas</canvas>
     <script>
         // get our canvas element
         const canvas = document.getElementById("canvas");
@@ -26,7 +26,6 @@
         document.oncontextmenu = function () {
             return false;
         }
-
         // list of all strokes drawn
         const drawings = [];
 
@@ -73,6 +72,7 @@
             for (let i = 0; i < drawings.length; i++) {
                 const line = drawings[i];
                 drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1));
+                
             }
         }
         redrawCanvas();
@@ -105,8 +105,8 @@
             }
 
             // update the cursor coordinates
-            cursorX = event.pageX;
-            cursorY = event.pageY;
+            // cursorX = event.pageX;
+            // cursorY = event.pageY;
             prevCursorX = event.pageX;
             prevCursorY = event.pageY;
         }
@@ -155,21 +155,18 @@
             // calculate how much we need to zoom
             const unitsZoomedX = trueWidth() * scaleAmount;
             const unitsZoomedY = trueHeight() * scaleAmount;
-
             const unitsAddLeft = unitsZoomedX * distX;
             const unitsAddTop = unitsZoomedY * distY;
-
             offsetX -= unitsAddLeft;
             offsetY -= unitsAddTop;
-
             redrawCanvas();
         }
         function drawLine(x0, y0, x1, y1) {
             context.beginPath();
             context.moveTo(x0, y0);
             context.lineTo(x1, y1);
-            context.strokeStyle = 'red';
-            context.lineWidth =50;
+            context.strokeStyle = 'white';
+            context.lineWidth =5;
             context.stroke();
         }
     </script>

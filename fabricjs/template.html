@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dwinzo template</title>
+</head>
+
+<body>
+    <canvas id="c" width="1900" height="900"></canvas>
+    <script src="./fabriclibrary.js"></script>
+    <script>
+        canvas = new fabric.Canvas('c')
+        let layer1 = new fabric.Rect({
+            left: 50,
+            top: 50,
+            fill: 'white',
+            stroke: 'black',
+            width: 1800,
+            height: 400,
+            opacity: 0.9,
+            selectable: true
+            // rx: 10,
+            // ry: 10 
+        })
+        let layer2 = new fabric.Rect({
+            left: 80,
+            top: 150,
+            fill: '#645E5E',
+            stroke: 'black',
+            width: 600,
+            height: 280,
+            // opacity:0.9,
+            selectable: true,
+            rx: 10,
+            ry: 10
+        })
+        let layer3 = new fabric.Rect({
+            left: 700,
+            top: 150,
+            fill: '#645E5E',
+            stroke: 'black',
+            width: 1110,
+            height: 280,
+            opacity: 0.9,
+            selectable: true,
+            rx: 10,
+            // ry: 10
+        })
+        let layer4 = new fabric.Rect({
+            left: 80,
+            top: 80,
+            fill: '#FF6D1C',
+            // brightness:1,
+            // stroke:'black',
+            width: 200,
+            height: 40,
+            // opacity:0.9,
+            selectable: true,
+            rx: 10,
+            // skewX:10,
+            // flipX:false,
+            // var rx : this.rx ? Math.min(this.rx, this.width / 2) : 0
+            // rx: [10, 0, 10, 10], 
+            //  ry: [10, 0, 0, 10]
+        })
+        let layer5 = new fabric.Rect({
+            left: 700,
+            top: 80,
+            fill: 'white',
+            stroke: 'black',
+            width: 1110,
+            height: 40,
+            // opacity: 0.9,
+            // shadow: 'black -5px -5px 3px',
+            selectable: true,
+            rx: 10,
+            ry: 10
+        })
+        let layer6 = new fabric.Rect({
+            left: 265,
+            top: 160,
+            fill: 'white',
+            stroke: 'black',
+            width: 400,
+            height: 40,
+            opacity: 0.9,
+            selectable: true,
+            rx: 10,
+            ry: 10
+        })
+        let layer7 = new fabric.Rect({
+            left: 100,
+            top: 160,
+            fill: 'silver',
+            // stroke:'black',
+            width: 150,
+            height: 255,
+            opacity: 0.9,
+            selectable: true,
+            rx: 10,
+            ry: 10
+        })
+        let layer8 = new fabric.Rect({
+            left: 1230,
+            top: 300,
+            fill: 'silver',
+            // stroke:'black',
+            width: 560,
+            height: 30,
+            opacity: 0.9,
+            selectable: true,
+            rx: 10,
+            ry: 10
+        })
+        let layer9 = new fabric.Rect({
+            left: 1230,
+            top: 324,
+            fill: 'white',
+            // stroke:'black',
+            width: 560,
+            height: 90,
+            opacity: 0.9,
+            selectable: true,
+            // rx: 10,
+            // ry: 10 
+        })
+        let layer10 = new fabric.Rect({
+            left: 1230,
+            top: 250,
+            fill: '#FF6D1C',
+            // stroke:'black',
+            width: 275,
+            height: 30,
+            opacity: 0.9,
+            selectable: true,
+            // rx: 10,
+            // ry: 10 
+        })
+        let layer11 = new fabric.Rect({
+            left: 1515,
+            top: 250,
+            fill: '#FF6D1C',
+            // stroke:'black',
+            width: 275,
+            height: 30,
+            opacity: 0.9,
+            selectable: true,
+            // rx: 10,
+            // ry: 10 
+        })
+        let layer12 = new fabric.Rect({
+            left: 1230,
+            top: 220,
+            fill: 'darkgrey',
+            // stroke:'black',
+            width: 275,
+            height: 30,
+            opacity: 0.9,
+            selectable: true,
+            // rx: 10,
+            // ry: 10 
+        })
+        let layer13 = new fabric.Rect({
+            left: 1515,
+            top: 220,
+            fill: 'darkgrey',
+            // stroke:'black',
+            width: 275,
+            height: 30,
+            opacity: 0.9,
+            selectable: true,
+            // rx: 10,
+            // ry: 10 
+        })
+        let layer14 = new fabric.Rect({
+            left: 1230,
+            top: 220,
+            fill: '#F2925C',
+            // stroke:'black',
+            width: 90,
+            height: 30,
+            opacity: 0.9,
+            selectable: true,
+            // rx: 10,
+            // ry: 10 
+        })
+        let layer15 = new fabric.Rect({
+            left: 1515,
+            top: 220,
+            fill: '#F2925C',
+            // stroke:'black',
+            width: 90,
+            height: 30,
+            opacity: 0.9,
+            selectable: true,
+            // rx: 10,
+            // ry: 10 
+        })
+        let circle1 = new fabric.Circle({
+            radius: 50,
+            fill: 'grey',
+            stroke: 'darkgrey',
+            strokeWidth: 2,
+            left: 710,
+            top: 300
+        });
+        let halfStrokeCircle1 = new fabric.Circle({
+            radius: 49,
+            fill: 'transparent',
+            stroke: '#FF6D1C',
+            strokeWidth: 6,
+            left: 710,
+            top: 300,
+            startAngle: 0,
+            endAngle: 180
+        });
+        let group1 = new fabric.Group([circle1, halfStrokeCircle1], {
+            selectable: true
+        })
+        let circle2 = new fabric.Circle({
+            radius: 50,
+            fill: 'grey',
+            stroke: 'darkgrey',
+            strokeWidth: 2,
+            left: 840,
+            top: 300
+        });
+        let halfStrokeCircle2 = new fabric.Circle({
+            radius: 49,
+            fill: 'transparent',
+            stroke: '#FF6D1C',
+            strokeWidth: 6,
+            left: 840,
+            top: 300,
+            startAngle: 270,
+            endAngle: 180
+        });
+        let group2 = new fabric.Group([circle2, halfStrokeCircle2], {
+            selectable: true
+        })
+        let circle3 = new fabric.Circle({
+            radius: 50,
+            fill: 'grey',
+            stroke: 'darkgrey',
+            strokeWidth: 2,
+            left: 970,
+            top: 300
+        });
+        let halfStrokeCircle3 = new fabric.Circle({
+            radius: 49,
+            fill: 'transparent',
+            stroke: '#FF6D1C',
+            strokeWidth: 6,
+            left: 970,
+            top: 300,
+            startAngle: -90,
+            endAngle: 10
+        });
+        let group3 = new fabric.Group([circle3, halfStrokeCircle3], {
+            selectable: true
+        })
+        let circle4 = new fabric.Circle({
+            radius: 50,
+            fill: 'grey',
+            stroke: 'darkgrey',
+            strokeWidth: 2,
+            left: 1100,
+            top: 300,
+        });
+        let halfStrokeCircle4 = new fabric.Circle({
+            radius: 49,
+            fill: 'transparent',
+            stroke: '#FF6D1C',
+            strokeWidth: 6,
+            left: 1100,
+            top: 300,
+            startAngle: -90,
+            endAngle: 30
+        });
+        let group4 = new fabric.Group([circle4, halfStrokeCircle4], {
+            selectable: true
+        })
+        canvas.add(layer1, layer2, layer3, layer4, layer5, layer6, layer7, layer8, layer9, layer10, layer11, layer12, layer13, layer14, layer15, group1, group2, group3, group4)
+
+        
+        let text;
+        function Text(content, left, top, fill, fontFamily, fontWeight, fontSize, align) {
+            text = new fabric.Text(content, {
+                left: left,
+                top: top,
+                fill: fill,
+                fontFamily: fontFamily,
+                fontWeight: fontWeight,
+                fontSize: fontSize,
+                textAlign: align,
+            })
+            canvas.add(text)
+        }
+
+        Text('Production stats', 710, 180, 'white', 'Arial', 'bold', 30, 'right')
+        Text('Availability', 710, 250, 'white', 'Arial', 'bold', 20, 'right')
+        Text('Performance', 840, 250, 'white', 'Arial', 'bold', 20, 'right')
+        Text('OEE', 1000, 250, 'white', 'Arial', 'bold', 20, 'right')
+        Text('Quantity', 1110, 250, 'white', 'Arial', 'bold', 20, 'right')
+        Text('Product Name :', 290, 165, 'black', 'Arial', 'normal', 30, 'right')
+        Text('PRODUCTION AND SALES COORDINATION', 710, 85, 'black', 'Arial', 'normal', 30, 'right')
+        Text('Delivery Date :-', 1230, 180, 'white', 'Arial', 'bold', 20, 'right')
+        Text('MATERIAL NAME', 1250, 305, 'black', 'Arial', 'bold', 15, 'right')
+        Text('CODE', 1440, 305, 'black', 'Arial', 'bold', 15, 'right')
+        Text('QUANTITY', 1565, 305, 'black', 'Arial', 'bold', 15, 'right')
+        Text('PRICE', 1705, 305, 'black', 'Arial', 'bold', 15, 'right')
+        Text('50 %', 740, 340, 'white', 'Arial', 'bold', 20, 'right')
+        Text('30 %', 870, 340, 'white', 'Arial', 'bold', 20, 'right')
+        Text('30 %', 1000, 340, 'white', 'Arial', 'bold', 20, 'right')
+        Text('30 %', 1130, 340, 'white', 'Arial', 'bold', 20, 'right')
+        Text('Iron', 1260, 340, 'black', 'Arial', 'normal', 20, 'right')
+        Text('Steel', 1260, 380, 'black', 'Arial', 'normal', 20, 'right')
+        Text('3001', 1440, 340, 'black', 'Arial', 'normal', 20, 'right')
+        Text('3002', 1440, 380, 'black', 'Arial', 'normal', 20, 'right')
+        Text('300g', 1580, 340, 'black', 'Arial', 'normal', 20, 'right')
+        Text('210g', 1580, 380, 'black', 'Arial', 'normal', 20, 'right')
+        Text('31$', 1710, 340, '#FF6D1C', 'Arial', 'normal', 20, 'right')
+        Text('28$', 1710, 380, '#FF6D1C', 'Arial', 'normal', 20, 'right')
+        Text('Order ID :-', 1330, 255, 'white', 'Arial', 'normal', 20, 'right')
+        Text('Dependency : None', 1550, 255, 'white', 'Arial', 'normal', 20, 'center')
+        Text('- \n PlannedPieces', 280, 230, 'white', 'Arial', 'normal', 15, 'center')
+        Text('- \n FinishedPieces', 420, 230, 'white', 'Arial', 'normal', 15, 'center')
+        Text('Running', 555, 225, '#FF6D1C', 'Arial', 'bold', 20, 'center')
+        Text('Status', 570, 250, 'white', 'Arial', 'normal', 15, 'center')
+        Text('- \n Estimated End Time', 270, 325, 'white', 'Arial', 'normal', 15, 'center')
+        Text('14/02 12:36\n Current Time', 430, 325, 'white', 'Arial', 'normal', 15, 'center')
+        Text('- \n Actual End Time', 540, 325, 'white', 'Arial', 'normal', 15, 'center')
+        Text('No Machine Se...', 100, 90, 'white', 'Arial', 'normal', 20, 'center')
+    </script>
+</body>
+
+</html>

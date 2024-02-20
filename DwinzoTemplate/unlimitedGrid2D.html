@@ -17,42 +17,35 @@
 
 <body>
     <canvas id="canvas" style="background-color: rgb(50, 48, 48);"></canvas>
-    <input id="Grid" type="button" value="Grid" onclick="Grid()">
+    <!-- <input id="Grid" type="button" value="Grid" onclick="Grid()"> -->
     <script>
         // get our canvas element
         const canvas = document.getElementById("canvas");
         canvas.width = window.innerWidth
         canvas.height = window.innerHeight
         const context = canvas.getContext("2d");
-
         // disable right clicking
         document.oncontextmenu = function () {
             return false;
         }
-
         // coordinates of our cursor
         let cursorX;
         let cursorY;
         let prevCursorX;
         let prevCursorY;
-
         // distance from origin
         let offsetX = 0;
         let offsetY = 0;
-
         // adjust step size as needed
         let step = 50;
-
         // zoom amount
         let scale = 1;
-
-        let gridEnabled = false;
-     
-
-        function Grid() {
-            gridEnabled = !gridEnabled;
-            draw();
-        }
+        // let gridEnabled = false;
+    
+        // function Grid() {
+        //     gridEnabled = !gridEnabled;
+        //     draw();
+        // }
         // convert coordinates
         function toScreenX(xTrue) {
             return (xTrue + offsetX) * scale;
@@ -113,39 +106,33 @@
                     rightMouseDown = true;
                     leftMouseDown = false;
                 }
-
                 // update the cursor coordinates
                 cursorX = event.pageX;
                 cursorY = event.pageY;
                 prevCursorX = event.pageX;
                 prevCursorY = event.pageY;
             }
-
             function onMouseMove(event) {
                 // get mouse position
                 cursorX = event.pageX;
                 cursorY = event.pageY;
-
-
-                if (gridEnabled && rightMouseDown) {
+                // if (gridEnabled && rightMouseDown) {
+                if ( rightMouseDown) {
                     offsetX += (cursorX - prevCursorX) / scale;
                     offsetY += (cursorY - prevCursorY) / scale;
                     redrawCanvas();
                 }
-
                 prevCursorX = cursorX;
                 prevCursorY = cursorY;
             }
-
             function onMouseUp() {
                 leftMouseDown = false;
                 rightMouseDown = false;
             }
-
             function onMouseWheel(event) {
                 const deltaY = event.deltaY;
                 const zoomRate = 0; // Adjust the zoom rate as needed
-                if (gridEnabled) {
+                // if (gridEnabled) {
                     if (deltaY < 0) {
                         scale *= (1 + zoomRate); // Zoom in
                         step++;
@@ -154,14 +141,13 @@
                         step--;
                     }
                     redrawCanvas();
-                }
+                // }
             }
         }
         function draw() {
             context.clearRect(0, 0, canvas.width, canvas.height);
             context.beginPath();
-
-            if (gridEnabled) {
+            // if (gridEnabled) {
                 let left = Math.floor(-offsetX / step) * step;
                 let top = Math.floor(-offsetY / step) * step;
                 let right = Math.ceil((canvas.width - offsetX) / step) * step;
@@ -171,20 +157,15 @@
                     context.moveTo(x + offsetX, top + offsetY);
                     context.lineTo(x + offsetX, bottom + offsetY);
                 }
-
                 for (let y = top; y <= bottom; y += step) {
                     context.moveTo(left + offsetX, y + offsetY);
                     context.lineTo(right + offsetX, y + offsetY);
                 }
-
                 context.strokeStyle = "white";
                 context.stroke();
-            }
+            // }
         }
-
         mouseEvents();
-        // defaultCanvas();
-
     </script>
 </body>
 

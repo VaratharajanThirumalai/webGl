@@ -134,14 +134,15 @@
         scale = scale * (1 + scaleAmount);
         // zoom the page based on where the cursor is
         var distX = event.pageX / canvas.clientWidth;
+        console.log('distX: ', distX);
         var distY = event.pageY / canvas.clientHeight;
         // calculate how much we need to zoom
-        const unitsZoomedX = trueWidth() * -scaleAmount;
-        const unitsZoomedY = trueHeight() * scaleAmount;
-        const unitsAddLeft = unitsZoomedX * distX;
-        const unitsAddTop = unitsZoomedY * distY;
-        offsetX += unitsZoomedX;
-        offsetY -= unitsZoomedY;
+        // const unitsZoomedX = trueWidth() * -scaleAmount;
+        // const unitsZoomedY = trueHeight() * scaleAmount;
+        // const unitsAddLeft = unitsZoomedX * distX;
+        // const unitsAddTop = unitsZoomedY * distY;
+        // offsetX += unitsZoomedX;
+        // offsetY -= unitsZoomedY;
         redrawCanvas();
     }
 }

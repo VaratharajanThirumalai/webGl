@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+    <body>
+        <canvas id="canvas"></canvas>
+        <script>
+    cartesian2d('canvas')
+function cartesian2d(idofCanvas){
+const canvas = document.getElementById(idofCanvas);
+const context     = canvas.getContext('2d');
+const canvasColor = '#292c34';
+const axisColor   = "#f0ffff";
+const GridSpacing = 20;
+let mousePosX  = 0;
+let mousePosY  = 0;
+let zoom       = 1;
+let zoomMin    = 0;
+let zoomMax    = 0;
+let opacity    = 0;
+let opacityMin = 0;
+let opacityMax = 0;
+let GridSize   = 1;
+let RatioOFGrid= 4;
+class Grid {
+    constructor() {
+        this.width    = stdCanvasW,
+        this.height   = stdCanvasH,
+        this.axisPosX = stdCanvasW / 2,
+        this.axisPosY = stdCanvasH / 2,
+        this.GridSizes = GridSpacing     
+    }
+    draw() {
+        if (this.GridSizes >= 2 * GridSpacing) {
+            if(Math.abs(Math.log2(GridSize)) % 3 == 0) {
+                this.GridSizes = 20;
+                GridSize = GridSize * 2;
+                RatioOFGrid = RatioOFGrid * 2;
+            }
+            else if (Math.abs(Math.log2(GridSize)) % 3 == 1) {
+                this.GridSizes = 16;
+                GridSize = GridSize * 2;
+                if (GridSize > 1) { RatioOFGrid = RatioOFGrid * 2.5; }
+                else { RatioOFGrid = RatioOFGrid * 2; }
+            }
+            else if (Math.abs(Math.log2(GridSize)) % 3 == 2) {
+                this.GridSizes = 20;
+                GridSize = GridSize * 2;
+                if (GridSize > 1) { RatioOFGrid = RatioOFGrid * 2; }
+                else{ RatioOFGrid = RatioOFGrid * 2.5; }
+            }
+        }
+        else if (this.GridSizes < GridSpacing / 2) {
+            if(Math.abs(Math.log2(GridSize)) % 3 == 0) {
+                RatioOFGrid = RatioOFGrid / 2;
+                this.GridSizes = 20;
+                GridSize = GridSize / 2
+            }
+            else if (Math.abs(Math.log2(GridSize)) % 3 == 1) {
+
+                if (GridSize < 1) {RatioOFGrid = RatioOFGrid / 2.5;}
+                else{RatioOFGrid = RatioOFGrid / 2;}
+                this.GridSizes = 16;
+                GridSize = GridSize / 2;
+            }
+            else if (Math.abs(Math.log2(GridSize)) % 3 == 2) {
+                if (GridSize < 1) {RatioOFGrid = RatioOFGrid / 2;}
+                else{RatioOFGrid = RatioOFGrid / 2.5;}
+                this.GridSizes = 20;
+                GridSize = GridSize / 2;
+            }
+        }
+        context.fillStyle = canvasColor;
+        context.fillRect(0, 0, this.width, this.height);
+        const minDivY  = -Math.ceil(this.axisPosY / this.GridSizes);
+        const minDivX  = -Math.ceil(this.axisPosX / this.GridSizes);
+        const maxDivY  =  Math.ceil((this.height - this.axisPosY) / this.GridSizes);
+        const maxDivX  =  Math.ceil((this.width  - this.axisPosX) / this.GridSizes);
+        for (let lineV = minDivY; lineV <= maxDivY; lineV++) {
+          this.setGridLines('v', lineV); this.setGridValues('v', lineV);
+        }
+        for (let lineH = minDivX; lineH <= maxDivX; lineH++) {
+          this.setGridLines('h', lineH); this.setGridValues('h', lineH);
+        }
+        this.setAxis();
+    }
+    setLineStyle(line) {
+        if (line == 'axis') {
+            context.lineWidth   = 1;
+            context.strokeStyle = axisColor;
+        }
+        else {
+            context.lineWidth = 0.5;
+            if(line % 8 == 0) {
+                if(zoom > 0) {context.strokeStyle = 'rgba(250,250,250,0.9)';}
+                else if (zoom < 0) {context.strokeStyle = 'rgba(250,250,250,' + this.setOpacity((this.GridSizes / GridSpacing), 0.9, 0.6) + ')';}
+            }
+            else if (line % 4 == 0) {
+                if(zoom > 0) {context.strokeStyle = 'rgba(250,250,250,' + this.setOpacity((this.GridSizes / GridSpacing), 0.6, 0.9) + ')';}
+                else if (zoom < 0) {context.strokeStyle = 'rgba(250,250,250,' + this.setOpacity((this.GridSizes / GridSpacing), 0.6, 0.2) + ')';}
+            }
+             else{
+                if(zoom > 0) {context.strokeStyle = 'rgba(250,250,250,' + this.setOpacity((this.GridSizes / GridSpacing), 0, 0.14) + ')'; }
+                else if (zoom < 0) {context.strokeStyle = 'rgba(250,250,250,' + this.setOpacity((this.GridSizes / GridSpacing), 0.05, 0) + ')'; }
+            }
+        }
+    }
+    setGridLines(direction, line) {
+        this.setLineStyle(line);
+        if(direction == 'v') {
+            const y = (this.axisPosY + this.GridSizes * line);
+            context.beginPath();
+            context.moveTo(0, y);
+            context.lineTo(this.width, y);
+        }
+        else if (direction == 'h') {
+            const x = (this.axisPosX + this.GridSizes * line);
+            context.beginPath();
+            context.moveTo(x, 0);
+            context.lineTo(x, this.height);
+        }
+        context.stroke();
+        context.closePath();
+    }
+    setGridValues(direction, line) {
+        context.font      = '12px Arial';
+        context.fillStyle = '#aaaaaa';
+        context.beginPath();
+        if(direction == 'v' && line % 4 == 0 && line != 0) {
+            let value = -line / RatioOFGrid;
+            let valueOffset   = context.measureText(value).width + 15
+            context.textAlign = 'right'
+
+            if(this.axisPosX >= this.width) {
+                context.fillText(value, this.width - 15, this.axisPosY - line * (-this.GridSizes) + 3)
+            }
+            else if (this.axisPosX <= valueOffset + 15) {
+                context.fillText(value, valueOffset, this.axisPosY - line * (-this.GridSizes) + 3)
+            }
+            else {
+                context.fillText(value, this.axisPosX - 15, this.axisPosY + line * this.GridSizes + 3)
+            }
+        }
+        else if (direction == 'h' && line % 4 == 0 && line != 0) {
+            let value         = line / RatioOFGrid;
+            context.textAlign = 'center'
+            if(this.axisPosY >= this.height - canvas.offsetTop) {
+             context.fillText(value, this.axisPosX + line * this.GridSizes, this.height - 20)
+            }
+            else if (this.axisPosY <= 0) {
+                context.fillText(value, this.axisPosX + line * this.GridSizes, 20)
+            }
+            else {
+                context.fillText(value, this.axisPosX + line * this.GridSizes, this.axisPosY + 20)
+            }
+        }
+        context.closePath();
+    }
+    setAxis() {
+        this.setLineStyle('axis');
+        context.beginPath();
+        context.moveTo(0, this.axisPosY);
+        context.lineTo(this.width, this.axisPosY);
+        context.moveTo(this.axisPosX, 0);
+        context.lineTo(this.axisPosX, this.height);
+
+        context.stroke();
+        context.closePath();
+        context.font      = '12px arial';
+        context.fillStyle = '#aaaaaa';
+        context.textAlign = 'center'
+        context.beginPath();
+        context.fillText(0, this.axisPosX - 15, this.axisPosY + 20)
+        context.closePath();
+    }
+
+    setPan() {
+        const beforeX  = mouseStartX / this.GridSizes;
+        const beforeY  = mouseStartY / this.GridSizes;
+
+        const afterX   = mousePosX / this.GridSizes;
+        const afterY   = mousePosY / this.GridSizes;
+
+        const deltaX   = afterX - beforeX;
+        const deltaY   = afterY - beforeY;
+
+        this.axisPosX  = lastAxisPosX;
+        this.axisPosY  = lastAxisPosY;
+
+        this.axisPosX += deltaX * this.GridSizes;
+        this.axisPosY += deltaY * this.GridSizes;
+
+        this.draw();
+    }
+
+    setZoom() {
+        const beforeX  = (mousePosX - this.axisPosX) / this.GridSizes;
+        const beforeY  = (mousePosY - this.axisPosY) / this.GridSizes;
+
+        this.GridSizes  = this.GridSizes + zoom;
+
+        // After zoom, you'll see the coordinates changed
+        const afterX   = (mousePosX - this.axisPosX) / this.GridSizes;
+        const afterY   = (mousePosY - this.axisPosY) / this.GridSizes;
+
+        // Calculate the shift
+        const deltaX   = afterX - beforeX;
+        const deltaY   = afterY - beforeY;
+
+        // "Undo" the shift by shifting the coordinate system's center
+        this.axisPosX += deltaX * this.GridSizes;
+        this.axisPosY += deltaY * this.GridSizes;
+
+        this.draw();
+    }
+
+    setOpacity(zoomLevel, val1, val2) {
+
+        if      (zoom > 0) {
+            opacityMin = val1; opacityMax = val2; zoomMin = 1  ; zoomMax = 2;
+        }
+        else if (zoom < 0) {
+            opacityMin = val2; opacityMax = val1; zoomMin = 0.5; zoomMax = 1;
+        }
+
+        const zoomRange        = (zoomMax - zoomMin);
+        const opacityRange     = (opacityMax - opacityMin);
+        const zoomLevelPercent = (zoomLevel - zoomMin) / zoomRange;
+        const opacityLevel     = (opacityRange * zoomLevelPercent) + opacityMin;
+        return opacityLevel;
+
+    }
+
+}
+
+
+function init() {
+
+    stdCanvasW = document.body.clientWidth - 2 * (canvas.offsetLeft);
+    stdCanvasH = stdCanvasW / 2;
+    optCanvasW = stdCanvasW * window.devicePixelRatioOFGrid;
+    optCanvasH = stdCanvasH * window.devicePixelRatioOFGrid;
+
+    if (window.devicePixelRatioOFGrid > 1) {
+        canvas.width  = optCanvasW;
+        canvas.height = optCanvasH;
+        context.scale(window.devicePixelRatioOFGrid, window.devicePixelRatioOFGrid);
+    }
+    else {
+        canvas.width  = stdCanvasW;
+        canvas.height = stdCanvasH;
+    }
+
+    canvas.style.width  = stdCanvasW + "px";
+    canvas.style.height = stdCanvasH + "px";
+
+    lastAxisPosX = stdCanvasW / 2
+    lastAxisPosY = stdCanvasH / 2
+
+    grid = new Grid();
+    grid.draw();
+
+}
+init();
+
+window.addEventListener("resize", init);
+canvas.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    zoom = e.wheelDelta / 120;
+    grid.setZoom();
+    lastAxisPosX = grid.axisPosX;
+    lastAxisPosY = grid.axisPosY;
+})
+canvas.addEventListener('mousedown', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    mouseStartX = parseInt(e.clientX) - canvas.offsetLeft;
+    mouseStartY = parseInt(e.clientY) - canvas.offsetTop;
+    canvas.onmousemove = function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        grid.setPan();
+    }
+})
+canvas.addEventListener('mousemove', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    mousePosX = parseInt(e.clientX) - canvas.offsetLeft;
+    mousePosY = parseInt(e.clientY) - canvas.offsetTop;
+})
+canvas.addEventListener('mouseup', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    canvas.onmousemove  = null;
+    canvas.onmousewheel = null;
+    lastAxisPosX = grid.axisPosX;
+    lastAxisPosY = grid.axisPosY;
+})
+canvas.addEventListener('mouseout', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    canvas.onmousemove  = null;
+    canvas.onmousewheel = null;
+    lastAxisPosX = grid.axisPosX;
+    lastAxisPosY = grid.axisPosY;
+})}
+</script>
+</body>
+</html>

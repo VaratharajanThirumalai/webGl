@@ -11,12 +11,12 @@
             width: 100%;
             height: 100%;
             margin: 0;
-        }  
+        }
     </style>
 </head>
 
 <body>
-    <canvas id="canvas" style="background-color: grey;">Your browser does not support HTML5 canvas</canvas>
+    <canvas id="canvas" style="background-color: rgb(50, 48, 48);"></canvas>
     <script>
         // get our canvas element
         const canvas = document.getElementById("canvas");
@@ -26,9 +26,6 @@
         document.oncontextmenu = function () {
             return false;
         }
-        // list of all strokes drawn
-        const drawings = [];
-
         // coordinates of our cursor
         let cursorX;
         let cursorY;
@@ -38,6 +35,9 @@
         // distance from origin
         let offsetX = 0;
         let offsetY = 0;
+
+         // adjust step size as needed
+        let step = 50;
 
         // zoom amount
         let scale = 1;
@@ -68,12 +68,7 @@
             // canvas.height = document.body.clientHeight;
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            
-            for (let i = 0; i < drawings.length; i++) {
-                const line = drawings[i];
-                drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1));
-                
-            }
+            draw()
         }
         redrawCanvas();
 
@@ -105,10 +100,11 @@
             }
 
             // update the cursor coordinates
-            // cursorX = event.pageX;
-            // cursorY = event.pageY;
+            cursorX = event.pageX;
+            cursorY = event.pageY;
             prevCursorX = event.pageX;
             prevCursorY = event.pageY;
+            draw()
         }
         function onMouseMove(event) {
             // get mouse position
@@ -120,21 +116,10 @@
             const prevScaledY = toTrueY(prevCursorY);
 
             if (leftMouseDown) {
-                // add the line to our drawing history
-                drawings.push({
-                    x0: prevScaledX,
-                    y0: prevScaledY,
-                    x1: scaledX,
-                    y1: scaledY
-                })
-                // draw a line
-                drawLine(prevCursorX, prevCursorY, cursorX, cursorY);
-            }
-            if (rightMouseDown) {
-                // move the screen
                 offsetX += (cursorX - prevCursorX) / scale;
                 offsetY += (cursorY - prevCursorY) / scale;
                 redrawCanvas();
+                draw()
             }
             prevCursorX = cursorX;
             prevCursorY = cursorY;
@@ -145,30 +130,60 @@
         }
         function onMouseWheel(event) {
             const deltaY = event.deltaY;
-            const scaleAmount = -deltaY / 500;
-            scale = scale * (1 + scaleAmount);
+            const zoomRate = 0; // Adjust the zoom rate as needed
 
-            // zoom the page based on where the cursor is
-            var distX = event.pageX / canvas.clientWidth;
-            var distY = event.pageY / canvas.clientHeight;
+            if (deltaY < 0 ) { 
+                scale *= (1 + zoomRate);  // Zoom in
+                step++;
 
-            // calculate how much we need to zoom
-            const unitsZoomedX = trueWidth() * scaleAmount;
-            const unitsZoomedY = trueHeight() * scaleAmount;
-            const unitsAddLeft = unitsZoomedX * distX;
-            const unitsAddTop = unitsZoomedY * distY;
-            offsetX -= unitsAddLeft;
-            offsetY -= unitsAddTop;
+            } else if (deltaY > 0 && step > 10) {
+                scale /= (1 + zoomRate);// Zoom out
+                step--;
+            }
+
+            // Calculate the cursor position relative to the canvas size
+            const distX = event.pageX / canvas.clientWidth;
+            console.log('distX: ', distX);
+           const distY = event.pageY / canvas.clientHeight;
+           console.log('distY: ', distY);
+
+            // Calculate the amount of canvas units to add on zoom
+            // const unitsAddLeft = trueWidth() * zoomRate * distX;
+            // console.log('unitsAddLeft: ', unitsAddLeft);
+            // const unitsAddTop = trueHeight() * zoomRate * distY;
+            // console.log('unitsAddTop : ', unitsAddTop );
+
+            // Adjust offsets based on zoom and cursor position
+            // offsetX -= distX;
+            // offsetY -=distY ;
+
             redrawCanvas();
         }
-        function drawLine(x0, y0, x1, y1) {
+
+        function draw() {
+            let left = Math.floor(-offsetX / step) * step;
+            let top = Math.floor(-offsetY / step) * step;
+            let right = Math.ceil((canvas.width - offsetX) / step) * step;
+            let bottom = Math.ceil((canvas.height - offsetY) / step) * step;
+
+            context.clearRect(0, 0, canvas.width, canvas.height);
             context.beginPath();
-            context.moveTo(x0, y0);
-            context.lineTo(x1, y1);
-            context.strokeStyle = 'white';
-            context.lineWidth =5;
+
+            for (let x = left; x <= right; x += step) {
+                context.moveTo(x + offsetX, top + offsetY);
+                context.lineTo(x + offsetX, bottom + offsetY);
+            }
+
+            for (let y = top; y <= bottom; y += step) {
+                context.moveTo(left + offsetX, y + offsetY);
+                context.lineTo(right + offsetX, y + offsetY);
+            }
+
+            context.strokeStyle = "white";
             context.stroke();
         }
+
+
     </script>
 </body>
 

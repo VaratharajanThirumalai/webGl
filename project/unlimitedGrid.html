@@ -47,14 +47,8 @@
         let scale = 1;
 
         let gridEnabled = false;
-        window.onload = (event) => {
-            console.log("page is fully loaded");
-            redrawCanvas();
-            mouseEvents()
-        };
-        // function defaultCanvas(event) {
-        //     redrawCanvas();
-        // }
+     
+
         function Grid() {
             gridEnabled = !gridEnabled;
             draw();
@@ -87,13 +81,10 @@
         function redrawCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            console.log('hello');
             draw();
         }
-        function drawCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            draw();
-        }
+        redrawCanvas()
 
         // if the window changes size, redraw the canvas
         window.addEventListener("resize", (event) => {
@@ -153,8 +144,8 @@
 
             function onMouseWheel(event) {
                 const deltaY = event.deltaY;
-                const zoomRate = 0.1; // Adjust the zoom rate as needed
-                // if (gridEnabled) {
+                const zoomRate = 0; // Adjust the zoom rate as needed
+                if (gridEnabled) {
                     if (deltaY < 0) {
                         scale *= (1 + zoomRate); // Zoom in
                         step++;
@@ -162,8 +153,8 @@
                         scale /= (1 + zoomRate); // Zoom out
                         step--;
                     }
-                    drawCanvas();
-                // }
+                    redrawCanvas();
+                }
             }
         }
         function draw() {

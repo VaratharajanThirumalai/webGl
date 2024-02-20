@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinite Canvas</title>
+
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" style="background-color: rgb(23, 23, 20);"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const context = canvas.getContext("2d");
+        let gridEnabled = false;
+        const drawings = [];
+        let cursorX;
+        let cursorY;
+        let prevCursorX;
+        let prevCursorY;
+        let offsetX = 0;// distance from origin
+        let offsetY = 0;;
+        let scale = 1;
+        // disable right clicking
+        document.oncontextmenu = function () { return false; }
+        // convert coordinates
+        function toScreenX(xTrue) { return (xTrue + offsetX) * scale; }
+        function toScreenY(yTrue) { return (yTrue + offsetY) * scale; }
+        function toTrueX(xScreen) { return (xScreen / scale) - offsetX; }
+        function toTrueY(yScreen) { return (yScreen / scale) - offsetY; }
+        function trueHeight() { return canvas.clientHeight / scale; }
+        function trueWidth() { return canvas.clientWidth / scale; }
+
+        function redrawCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        
+            for (let i = 0; i < drawings.length; i++) {
+                const line = drawings[i];
+                drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1));
+            }
+        }
+        redrawCanvas()
+        // Mouse Event Handlers
+        canvas.addEventListener("resize", (event) => { redrawCanvas(); });
+        canvas.addEventListener('mousedown', onMouseDown);
+        canvas.addEventListener('mouseup', onMouseUp, false);
+        canvas.addEventListener('mouseout', onMouseUp, false);
+        canvas.addEventListener('mousemove', onMouseMove, false);
+        canvas.addEventListener('wheel', onMouseWheel, false);
+
+        // mouse functions
+        let leftMouseDown = false;
+        let rightMouseDown = false;
+
+        function onMouseDown(event) {
+            // detect left clicks
+            if (event.button == 0) {
+                leftMouseDown = true;
+                rightMouseDown = false;
+            }
+            // detect right clicks
+            if (event.button == 2) {
+                rightMouseDown = true;
+                leftMouseDown = false;
+            }
+            // update the cursor coordinates
+            cursorX = event.pageX;
+            cursorY = event.pageY;
+            prevCursorX = event.pageX;
+            prevCursorY = event.pageY;
+        }
+        function onMouseMove(event) {
+            // get mouse position
+            cursorX = event.pageX;
+            cursorY = event.pageY;
+            const scaledX = toTrueX(cursorX);
+            const scaledY = toTrueY(cursorY);
+            const prevScaledX = toTrueX(prevCursorX);
+            const prevScaledY = toTrueY(prevCursorY);
+            if (leftMouseDown) {
+                drawings.push({
+                    x0: prevScaledX,
+                    y0: prevScaledY,
+                    x1: scaledX,
+                    y1: scaledY
+                })
+                drawLine(prevCursorX, prevCursorY, cursorX, cursorY);
+            }
+            if (rightMouseDown) {
+                // move the screen
+                offsetX += (cursorX - prevCursorX) / scale;
+                offsetY += (cursorY - prevCursorY) / scale;
+                redrawCanvas();
+            }
+            prevCursorX = cursorX;
+            prevCursorY = cursorY;
+        }
+        function onMouseUp() {
+            leftMouseDown = false;
+            rightMouseDown = false;
+        }
+        function onMouseWheel(event) {
+    const deltaY = event.deltaY;
+    const zoomRate = 0; // Adjust the zoom rate as needed
+
+    if (deltaY < 0 ) { 
+        scale *= (1 + zoomRate);  // Zoom in
+        step++;
+
+    } else if (deltaY > 0 && step > 10) {
+        scale /= (1 + zoomRate);// Zoom out
+        step--;
+    }
+
+    // Calculate the cursor position relative to the canvas size
+    const distX = event.pageX / canvas.clientWidth;
+   const distY = event.pageY / canvas.clientHeight;
+
+    // Calculate the amount of canvas units to add on zoom
+    const unitsAddLeft = trueWidth() * zoomRate * distX;
+    const unitsAddTop = trueHeight() * zoomRate * distY;
+
+    // Adjust offsets based on zoom and cursor position
+    offsetX -= distX;
+    offsetY -=distY ;
+
+    redrawCanvas();
+}
+        function drawLine(x0, y0, x1, y1) {
+            context.beginPath();
+            context.moveTo(x0, y0);
+            context.lineTo(x1, y1);
+            context.strokeStyle = 'red';
+            context.lineWidth = 4;
+            context.stroke();
+        }
+      
+    </script>
+</body>
+
+</html>

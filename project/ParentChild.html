@@ -9,7 +9,7 @@
       padding: auto;
     }
 
-    #gridline {
+    #pChild {
       background-color: rgb(255, 231, 231);
       border: 5px solid black;
       padding: 60px;
@@ -101,7 +101,7 @@
     <div id='my-div'>
       <button id="delete-button">Delete</button>
     </div>
-    <canvas id="gridline" width="1300" height="700"></canvas>
+    <canvas id="pChild" width="1300" height="700"></canvas>
   </div>
   <div id="div">
     <h3>Tree View</h3>
@@ -116,9 +116,10 @@
     <button id="button-shapes" onclick="getOutput()">Click</button>
   </div>
   <script>
-    const canvas = document.getElementById('gridline');
+    const canvas = document.getElementById('pChild');
     const gl = canvas.getContext('2d');
     const div = document.getElementById('my-div');
+    const tree= document.getElementById('div');
     const treeView = document.getElementById('ul');
     const selectElement = document.getElementById('shapes');
     div.style.display = 'none';
@@ -143,7 +144,20 @@
         drawDefaultShapes(output);
       }
     }
-
+    
+    let text;
+    function checkType(output) {
+      let div1 = document.createElement("li");
+      div1.draggable = true;
+      div1.id = shapeIdCounter - 1; // Set the ID of the li to match the shape ID
+      if (output == 1) {
+        text = document.createTextNode(`RECTANGLE`);
+      } else if (output == 2) {
+        text = document.createTextNode(`CIRCLE`);
+      };
+      div1.appendChild(text);
+      treeView.appendChild(div1);
+    }
     function drawDefaultShapes(output) {
       const id = shapeIdCounter++;
       let treeViewItem;
@@ -182,19 +196,6 @@
           gl.strokeRect(shape.x - 5, shape.y - 5, shape.width + 10, shape.height + 10);
         }
       });
-    }
-    let text;
-    function checkType(output) {
-      let div1 = document.createElement("li");
-      div1.draggable = true;
-      div1.id = shapeIdCounter - 1; // Set the ID of the li to match the shape ID
-      if (output == 1) {
-        text = document.createTextNode(`RECTANGLE`);
-      } else if (output == 2) {
-        text = document.createTextNode(`CIRCLE`);
-      };
-      div1.appendChild(text);
-      treeView.appendChild(div1);
     }
     function createTree(shapes, parentUl, depth = 0, maxDepth = 10) {
       shapes.forEach(shape => {

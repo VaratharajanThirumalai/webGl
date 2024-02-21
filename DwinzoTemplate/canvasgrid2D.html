@@ -45,6 +45,7 @@
         function redrawCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            context.clearRect(0, 0, this.canvas.width, this.canvas.height);
             if (gridEnabled) {
                 drawGrid();
             }

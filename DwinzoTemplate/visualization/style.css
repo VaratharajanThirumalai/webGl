@@ -1,0 +1,443 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(112.68deg, #edf0f2 0%, #edf3f6 100%);
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  color: #323232;
+}
+.container .nav {
+  display: flex;
+  justify-content: center;
+}
+.container .nav .head {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  left: 25px;
+  gap: 10px;
+}
+.container .nav .head .para {
+  width: 112px;
+  height: 32px;
+  border: 1px solid #cadbec;
+  font-family: Poppins;
+  font-size: 16px;
+  color: #323232;
+  border-radius: 10px;
+  background-color: rgba(242, 242, 242, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.container .nav .head .line {
+  width: 112px;
+  height: 1px;
+  background-color: #cadbec;
+}
+.container .nav .tools {
+  width: 306px;
+  height: 60px;
+  display: flex;
+  text-align: center;
+  justify-content: space-evenly;
+  align-items: center;
+  border: 1px solid #cadbec;
+  border-radius: 10px;
+  background-color: rgba(242, 242, 242, 0.8);
+}
+.container .nav .tools .img {
+  height: 75%;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.container .content {
+  display: flex;
+  justify-content: space-between;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 500;
+  color: #323232;
+}
+.container .content .content-1 {
+  width: 275px;
+  height: 846px;
+  border: 1px solid #cadbec;
+  background-color: rgba(242, 242, 242, 0.8);
+  border-radius: 20px;
+  display: flex;
+  font-size: 12px;
+}
+.container .content .content-1 .side {
+  display: flex;
+  flex-direction: column;
+  width: 50px;
+  height: 100%;
+  border-right: 1px solid #cadbec;
+}
+.container .content .content-1 .side .img {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #cadbec;
+}
+.container .content .content-1 .side .img img {
+  width: 14.35px;
+  height: 14.4px;
+}
+.container .content .content-1 .side .img:nth-child(1) {
+  border-left: 1px solid #20be9b;
+  border-radius: 20px 0 0 0;
+}
+.container .content .content-1 .contentZ {
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+}
+.container .content .content-1 .contentZ .head {
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 500;
+  color: #323232;
+  padding: 5px;
+}
+.container .content .content-1 .contentZ .template {
+  padding-right: 10px;
+  width: 212.23px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.container .content .content-1 .contentZ .template div {
+  display: flex;
+  gap: 10px;
+}
+.container .content .content-1 .contentZ .template .add {
+  display: flex;
+  align-items: center;
+  font-size: 28px;
+  gap: 18px;
+}
+.container .content .content-1 .contentZ .template .add i {
+  font-size: 14px;
+  font-weight: 100;
+}
+.container .content .content-1 .contentZ .template1 {
+  padding-left: 20px;
+}
+.container .content .container-2 {
+  width: 275px;
+  height: 846px;
+  background-color: rgba(242, 242, 242, 0.8);
+  border: 1px solid #cadbec;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+}
+.container .content .container-2 .design {
+  width: 100%;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #cadbec;
+  display: flex;
+  flex-direction: column;
+  padding: 7px;
+  gap: 5px;
+}
+.container .content .container-2 .design .p {
+  padding: 5px;
+}
+.container .content .container-2 .design .dropdown {
+  width: 259px;
+  height: 24px;
+  border: 1px solid #cadbec;
+  border-radius: 4px;
+  font-weight: 400;
+  color: #323232;
+  border-radius: 4px;
+  background-color: rgba(242, 242, 242, 0.8);
+  outline: none;
+  font-size: 12px;
+}
+.container .content .container-2 .design .dropdown .value {
+  font-family: Poppins;
+  font-size: 12px;
+  font-weight: 400;
+}
+.container .content .container-2 .design .div1 {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.container .content .container-2 .design .div1 .dropdown {
+  outline: none;
+}
+.container .content .container-2 .design .div1 .dropdown:nth-child(1) {
+  width: 193px;
+}
+.container .content .container-2 .design .div1 .dropdown:nth-child(2) {
+  width: 58px;
+}
+.container .content .container-2 .design .div2 {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.container .content .container-2 .design .div2 .dropdown {
+  outline: none;
+  font-size: 12px;
+}
+.container .content .container-2 .design .div2 .dropdown:nth-child(1) {
+  width: 83px;
+}
+.container .content .container-2 .design .div2 .dropdown:nth-child(2) {
+  width: 83px;
+}
+.container .content .container-2 .design .div2 .dropdown:nth-child(3) {
+  width: 83px;
+}
+.container .content .container-2 .design .div2 .align {
+  width: 50%;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px solid #cadbec;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.container .content .container-2 .design .div2 .align button {
+  border: none;
+}
+.container .content .container-2 .design .div2 .clr {
+  width: 50%;
+  height: 24px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.container .content .container-2 .design .div2 .clr p {
+  padding-top: 10px;
+}
+.container .content .container-2 .design .div2 .clr input {
+  background: transparent;
+  outline: none;
+  border: none;
+  border: 1px solid #cadbec;
+}
+.container .content .container-2 .spacing {
+  border-bottom: 1px solid #cadbec;
+  padding-bottom: 20px;
+}
+.container .content .container-2 .spacing .para {
+  padding: 10px 7px;
+}
+.container .content .container-2 .spacing .outline {
+  width: 274px;
+  height: 156.57px;
+  background-color: #cadbec;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.container .content .container-2 .spacing .outline .margin {
+  width: 256.39px;
+  height: 141px;
+  background-color: #ecf0f3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+}
+.container .content .container-2 .spacing .outline .margin .p {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  font-family: Poppins;
+  font-size: 8px;
+  font-weight: 400;
+  color: #323232;
+}
+.container .content .container-2 .spacing .outline .margin .p .text {
+  width: 10px;
+  height: 10px;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+.container .content .container-2 .spacing .outline .margin .p .text:nth-child(1) {
+  position: absolute;
+  top: 0px;
+  left: 120px;
+  font-family: Poppins;
+  font-size: 10px;
+  font-weight: 500;
+  color: #323232;
+}
+.container .content .container-2 .spacing .outline .margin .p .text:nth-child(2) {
+  position: absolute;
+  top: 55px;
+  left: 0;
+  font-family: Poppins;
+  font-size: 10px;
+  font-weight: 500;
+  color: #323232;
+}
+.container .content .container-2 .spacing .outline .margin .p .text:nth-child(3) {
+  position: absolute;
+  left: 240px;
+  top: 55px;
+  font-family: Poppins;
+  font-size: 10px;
+  font-weight: 500;
+  color: #323232;
+}
+.container .content .container-2 .spacing .outline .margin .p .text:nth-child(4) {
+  position: absolute;
+  left: 120px;
+  top: 120px;
+  font-family: Poppins;
+  font-size: 10px;
+  font-weight: 500;
+  color: #323232;
+}
+.container .content .container-2 .spacing .outline .margin .padding {
+  width: 172.23px;
+  height: 84.8px;
+  border: 1px solid #cadbec;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.container .content .container-2 .spacing .outline .margin .padding .p {
+  position: absolute;
+  top: 35px;
+  left: 50px;
+}
+.container .content .container-2 .spacing .outline .margin .padding .p .text {
+  width: 10px;
+  height: 10px;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+.container .content .container-2 .spacing .outline .margin .padding .p .text:nth-child(1) {
+  position: absolute;
+  top: 0px;
+  left: 75px;
+  font-family: Poppins;
+  font-size: 10px;
+  font-weight: 500;
+  color: #323232;
+}
+.container .content .container-2 .spacing .outline .margin .padding .p .text:nth-child(2) {
+  position: absolute;
+  top: 25px;
+  left: 0;
+  font-family: Poppins;
+  font-size: 10px;
+  font-weight: 500;
+  color: #323232;
+}
+.container .content .container-2 .spacing .outline .margin .padding .p .text:nth-child(3) {
+  position: absolute;
+  left: 150px;
+  top: 25px;
+  font-family: Poppins;
+  font-size: 10px;
+  font-weight: 500;
+  color: #323232;
+}
+.container .content .container-2 .spacing .outline .margin .padding .p .text:nth-child(4) {
+  position: absolute;
+  left: 75px;
+  top: 60px;
+  font-family: Poppins;
+  font-size: 10px;
+  font-weight: 500;
+  color: #323232;
+}
+.container .content .container-2 .spacing .outline .margin .padding .ele {
+  width: 50px;
+  height: 20.88px;
+  background-color: #cadbec;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.container .content .container-2 .contracts {
+  border-bottom: 1px solid #cadbec;
+  padding-bottom: 20px;
+  padding: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.container .content .container-2 .contracts .ele {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+.container .content .container-2 .contracts .ele-main {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container .content .container-2 .contracts .img {
+  width: 154px;
+  height: 12px;
+}
+.container .content .container-2 .color {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 10px;
+  padding: 7px;
+  background: transparent;
+}
+.container .content .container-2 .color .dropdown {
+  outline: none;
+  width: 83px;
+  height: 24px;
+  border: 1px solid #cadbec;
+  border-radius: 4px;
+}
+.container .content .container-2 .color .clr {
+  display: flex;
+  gap: 10px;
+}
+.container .content .container-2 .color .clr input {
+  border: 1px solid #cadbec;
+}
+
+.active {
+  background-color: rgba(211, 209, 209, 0.8);
+  border-radius: 8px;
+}
+
+input,
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}/*# sourceMappingURL=style.css.map */

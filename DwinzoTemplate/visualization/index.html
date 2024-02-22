@@ -4,8 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
@@ -32,13 +30,9 @@
                     <div class="head">Sheets</div>
                     <div class="container">
                         <div class="template">
-                            <div id="div">
-                                <i class="fa fa-sort-down"></i>
-                                <ul class="tem">Template 1
-                                    <ul class="rem" id="ul"></ul>
-                                </ul>
+                            <div id="div"> 
+                                <ul class="rem" id="ul"></ul>
                             </div>
-                            <!-- <div class="add">+</div> -->
                         </div>
                     </div>
                 </div>
@@ -127,8 +121,9 @@
         let colorPickers = document.getElementsByClassName('colorPicker');
         let clrDisplays = document.getElementsByClassName('clrdisplay');
         const template = document.querySelector('.rem');
+        const treeView = document.querySelector('div');
         const container = document.querySelector('.container');
-        const treeView = document.getElementById('ul');
+        // const treeView = document.getElementById('ul');
         const shapes = [];
 
         for (let i = 0; i < colorPickers.length; i++) {
@@ -200,16 +195,26 @@
             treeView.appendChild(li);
             return li;
         }
-        document.addEventListener("click", function (event) {
+
+        
+        treeView.addEventListener("click", function (event) {
             if (event.target.tagName.toLowerCase() === "li") {
                 const clickedLi = event.target;
                 if (clickedLi.childElementCount > 0) {
-                    const nestedUl = clickedLi.querySelector("ul");
+                    const nestedUl = clickedLi.querySelector( "ul");
                     if (nestedUl) {
                         if (nestedUl.style.display === "none") {
                             nestedUl.style.display = "block";
                         } else {
                             nestedUl.style.display = "none";
+                        }
+                    }
+                    const nestedli = clickedLi.querySelector("li");
+                    if (nestedli) {
+                        if (nestedli.style.display === "none") {
+                            nestedli.style.display = "block";
+                        } else {
+                            nestedli.style.display = "none";
                         }
                     }
                 }

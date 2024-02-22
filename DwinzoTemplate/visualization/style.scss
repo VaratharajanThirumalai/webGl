@@ -145,6 +145,20 @@ canvas{
                             margin-left: 4px;
                         }
                     }
+                    .dropdown-btn {
+                        padding: 6px 8px 6px 16px;
+                        text-decoration: none;
+                        font-size: 20px;
+                        color: #818181;
+                        display: block;
+                        border: none;
+                        background: none;
+                        width: 100%;
+                        text-align: left;
+                        cursor: pointer;
+                        outline: none;
+                      }
+                      
                 }
                 .head {
                     font-family: Poppins;
@@ -492,3 +506,4 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+

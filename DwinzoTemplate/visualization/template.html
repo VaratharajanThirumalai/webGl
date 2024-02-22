@@ -1,0 +1,712 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <div class="head">
+                <div class="para">Add tooltip</div>
+                <div class="line"></div>
+            </div>
+            <div class="tools">
+                <div class="img active"><img src="./img/rec.png" id="rectangle"alt srcset ></div>
+                <div class="img"><img src="./img/cir.png" alt srcset draggable="false"></div>
+                <div class="img"><img src="./img/dis3.png" alt srcset></div>
+                <div class="img"><img src="./img/pen4.png" alt srcset></div>
+                <div class="img"><img src="./img/text4.png" alt srcset></div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="content-1">
+                <div class="contentZ">
+                    <div class="head">Sheets</div>
+                    <div class="container">
+                        <div class="template">
+                            <div>
+                                <i class="fa fa-sort-down"></i>
+                                <ul class="tem">Template 1
+                                    <ul class="rem" id="div"></ul>
+                                </ul>
+                            </div>
+                            <div class="add">+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-2">
+                <div class="design">
+                    <div class="p">Design</div>
+                </div>
+                <div class="design">
+                    <div class="p">Text</div>
+                    <select class="dropdown">
+                        <option value="Poppins">Poppins</option>
+                    </select>
+                    <div class="div1">
+                        <select class="dropdown">
+                            <option value="Medium">Medium</option>
+                        </select>
+                        <select class="dropdown">
+                            <option value="12">12</option>
+                        </select>
+                    </div>
+                    <div class="div2">
+                        <div class="align">
+                            <button><img src="./img/align1.png" alt></button>
+                            <button><img src="./img/align2.png" alt></button>
+                            <button><img src="./img/align3.png" alt></button>
+                        </div>
+                        <div class="clr">
+                            <input type="color" class="colorPicker" value="#8C9BAA">
+                            <p class="clrdisplay">#8C9BAA</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="spacing">
+                    <div class="para">Spacing</div>
+                    <div class="outline">
+                        <div class="margin">
+                            <div class="p">MARGIN
+                                <input type="number" class="text" placeholder="0">
+                                <input type="number" class="text" placeholder="0">
+                                <input type="number" class="text" placeholder="0">
+                                <input type="number" class="text" placeholder="0">
+                            </div>
+                            <div class="padding">
+                                <div class="p">PADDING
+                                    <input type="number" class="text" placeholder="0">
+                                    <input type="number" class="text" placeholder="0">
+                                    <input type="number" class="text" placeholder="0">
+                                    <input type="number" class="text" placeholder="0">
+                                </div>
+                                <div class="ele"><i class="fa fa-lock"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contracts">
+                    <div class="para">Constraints</div>
+                    <div class="ele">
+                        <img src="./img/ele1.png" alt>
+                        <img src="./img/ele2.png" alt>
+                        <img src="./img/ele3.png" alt>
+                        <img src="./img/ele4.png" alt>
+                        <img src="./img/ele5.png" alt>
+                        <img src="./img/ele6.png" alt>
+                        <img src="./img/ele7.png" alt>
+                    </div>
+                    <div class="ele-main">
+                        <img src="./img//constraints.png" alt>
+                    </div>
+                    <div class="ele-main">
+                        <img src="./img/Gap.png" alt>
+                    </div>
+                </div>
+                <div class="color">
+                    <div class="para">Selection color</div>
+                    <div class="clr">
+                        <input type="color" class="colorPicker" value="#8C9BAA">
+                        <p class="clrdisplay">#8C9BAA</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./style.css"></script>
+    <script src="./style.scss"></script>
+    <script>
+    let colorPickers = document.getElementsByClassName('colorPicker');
+    let clrDisplays = document.getElementsByClassName('clrdisplay');
+    const template = document.querySelector('.rem');
+    const container = document.querySelector('.container');
+    const shapes = [];
+    let isDraggingShape = false;
+    let isScalingShape = false;
+    let shapeBeingDragged = null;
+    let shapeBeingScaled = null;
+    
+    
+    for (let i = 0; i < colorPickers.length; i++) {
+        colorPickers[i].addEventListener("input", function () {
+            const selectedColor = colorPickers[i].value;
+            clrDisplays[i].innerHTML = selectedColor;
+        });
+    }
+    
+    const shapesData = [
+        {
+            id: 1,
+            type:  'rectangle',
+            children: [
+                {
+                    id: 2,
+                    type: 'circle',
+                    children: []
+                },
+                {
+                    id: 3,
+                    type: 'triangle',
+                    children: []
+                }
+            ]
+        },
+        {
+            id: 1,
+            type:  'Triangle',
+            children: [
+                {
+                    id: 2,
+                    type: 'circle',
+                    children: []
+                },
+                {
+                    id: 3,
+                    type: 'rectangle',
+                    children: []
+                }
+            ]
+        },
+
+    ];
+    
+    function createTree(shapes, parentUl, depth = 0, maxDepth = 10) {
+        shapes.forEach(shape => {
+            const li = document.createElement("li");
+            li.draggable = true;
+            li.id = shape.id;
+            const text = document.createTextNode(shape.type.toUpperCase());
+            li.appendChild(text);
+            if (depth < maxDepth && shape.children && shape.children.length > 0) {
+                const nestedUl = document.createElement("li");
+                li.appendChild(nestedUl);
+                if (parentUl !== nestedUl) {
+                    createTree(shape.children, nestedUl, depth + 1, maxDepth);
+                }
+            }
+            parentUl.appendChild(li);
+        });
+    }
+    createTree(shapesData, template);
+    
+    // function drawTreeView() {
+    //     treeView.innerHTML = '';
+    //     createTree(shapes, treeView);
+    // }
+    
+    // fix the li item within the tree view box
+    function createTreeViewItem(id, type) {
+        const li = document.createElement("li");
+        li.draggable = true;
+        li.id = id;
+        const text = document.createTextNode(type.toUpperCase());
+        li.appendChild(text);
+        treeView.appendChild(li);
+        return li;
+    }
+    
+   
+    
+    // function updateChildPositions(parentShape, deltaX, deltaY) {
+    //     parentShape.children.forEach(childShape => {
+    //         // Check if the child is in the tree view as a child of the dragged parent
+    //         const childElement = document.getElementById(childShape.id.toString());
+    //         const isChildInView = isElementInDiv(childElement);
+    //         // Check if the child is not an individual child element
+    //         const isChildElement = childElement.parentNode !== document.getElementById('ul');
+    //         if (isChildInView && isChildElement) {
+    //             // Update the position of each child shape relative to the movement of the parent
+    //             childShape.x += deltaX;
+    //             childShape.y += deltaY;
+    //             // Check if the child has children before making the recursive call
+    //             if (childShape.children && childShape.children.length > 0) {
+    //                 // Recursive call for child's children
+    //                 updateChildPositions(childShape, deltaX, deltaY);
+    //             }
+    //         }
+    //     });
+    // }
+    // container.addEventListener('mousedown', (e) => {
+    //     const mouseX = e.clientX - container.getBoundingClientRect().left;
+    //     const mouseY = e.clientY - container.getBoundingClientRect().top;
+    //     shapes.forEach(shape => {
+    //         if (mouseX >= shape.x && mouseX <= shape.x + shape.width && mouseY >= shape.y && mouseY <= shape.y + shape.height) {
+    //             if (mouseX >= shape.x + shape.width - 10 && mouseX <= shape.x + shape.width && mouseY >= shape.y + shape.height - 10 && mouseY <= shape.y + shape.height) {
+    //                 isScalingShape = true;
+    //                 shapeBeingScaled = shape;
+    //                 scalingCorner = 'bottom-center';
+    //                 originalWidth = shape.width;
+    //                 originalHeight = shape.height;
+    //             } else {
+    //                 isDraggingShape = true;
+    //                 shapeBeingDragged = shape;
+    //                 offsetX = mouseX - shape.x;
+    //                 offsetY = mouseY - shape.y;
+    //             }
+    //         }
+    //     });
+    // });
+    
+    // container.addEventListener('mousemove', (e) => {
+    //     const mouseX = e.clientX - container.getBoundingClientRect().left;
+    //     const mouseY = e.clientY - container.getBoundingClientRect().top;
+    //     if (isDraggingShape) {
+    //         if (shapeBeingDragged) {
+    //             const deltaX = mouseX - shapeBeingDragged.x - offsetX;
+    //             const deltaY = mouseY - shapeBeingDragged.y - offsetY;
+    //             // Update the position of the parent shape
+    //             shapeBeingDragged.x = mouseX - offsetX;
+    //             shapeBeingDragged.y = mouseY - offsetY;
+    //             // Update the positions of child shapes only if they are children in the tree view
+    //             updateChildPositions(shapeBeingDragged, deltaX, deltaY);
+    //         } else if (shapeBeingScaled) {
+    //             shapeBeingScaled.width = originalWidth + (mouseX - shapeBeingScaled.x - offsetX);
+    //             shapeBeingScaled.height = originalHeight + (mouseY - shapeBeingScaled.y - offsetY);
+    //         }
+    //         drawCanvas();
+    //     }
+    // });
+    
+    
+    document.addEventListener("dragstart", function (event) {
+        if (event.target.tagName.toLowerCase() === "li") {
+            event.target.style.opacity = 1;
+            event.dataTransfer.setData("text", event.target.id);
+        }
+    });
+    
+    document.addEventListener("dragover", function (event) {
+        event.preventDefault();
+        if (event.target.tagName.toLowerCase() === "li") {
+            event.target.style.border = "1px dashed #000000";
+        }
+    });
+    
+    document.addEventListener("drop", function (event) {
+        event.preventDefault();
+        const data = event.dataTransfer.getData("text");
+        const draggedLi = document.getElementById(data);
+        const targetLi = event.target;
+        const isDropTargetInDiv = isElementInDiv(targetLi);
+        // Check if the drop target is an individual parent element in the tree view
+        const isDropTargetParent = targetLi.tagName.toLowerCase() === "li" && targetLi.childElementCount > 0;
+        if (isDropTargetInDiv) {
+            const parentShapeId = parseInt(targetLi.id);
+            const parentShape = shapes.find(shape => shape.id === parentShapeId);
+            // Check if the dragged element is a child element
+            const isChildElement = targetLi.parentNode !== draggedLi.parentNode;
+            if (isChildElement && isDropTargetParent) {
+                // Remove child functionalities if dropped as an individual parent element
+                parentShape.children = [];
+            } else {
+                // Add the dragged element as a child
+                if (parentShape) {
+                    const childShapeId = shapes.find(shape => shape.id === parseInt(data)).id;
+                    const childShape = shapes.find(shape => shape.id === childShapeId);
+                    if (childShape) {
+                        parentShape.children.push(childShape);
+                    }
+                }
+            }
+            // Append the dragged element to the drop target
+            targetLi.appendChild(draggedLi);
+        }
+        resetOpacity();
+    });
+    
+    function isElementInDiv(element) {
+        const divContainer = document.getElementById("div");
+        return divContainer.contains(element);
+    }
+    
+    document.addEventListener("dragend", function () {
+        resetOpacity();
+    });
+    
+    function resetOpacity() {
+        const draggableItems = document.querySelectorAll("li");
+        draggableItems.forEach(item => {
+            item.style.opacity = 1;
+            item.style.border = "";
+        });
+    }
+    
+    container.addEventListener('mouseup', () => {
+        isDraggingShape = false;
+        isScalingShape = false;
+        shapeBeingDragged = null;
+        shapeBeingScaled = null;
+        scalingCorner = null;
+    });
+    
+    // treeView.addEventListener('click', (e) => {
+    //     const shapeId = parseInt(e.target.id);
+    //     const selectedShape = shapes.find(shape => shape.id === shapeId);
+    
+    //     if (selectedShape) {
+    //         // Clear previous selection
+    //         shapes.forEach(shape => (shape.isSelected = false));
+    
+    //         // Mark the selected shape and its children
+    //         markSelectedAndChildren(selectedShape);
+    
+    //         // Redraw the container
+    //         drawCanvas();
+    //     }
+    // });
+    
+    function markSelectedAndChildren(shape) {
+        // Check if the current shape or its children have already been marked as selected
+        if (shape.isSelected) {
+            return;
+        }
+    
+        // Mark the current shape as selected
+        shape.isSelected = true;
+    
+        // Recursively mark children
+        shape.children.forEach(childShape => {
+            markSelectedAndChildren(childShape);
+        });
+    }
+    
+    container.addEventListener('click', (e) => {
+        let x = e.clientX - container.getBoundingClientRect().left;
+        let y = e.clientY - container.getBoundingClientRect().top;
+    
+        // Find the selected shape in the container           
+        let selectedShapeIndex = -1;
+        shapes.forEach((shape, index) => {
+            if (x >= shape.x && x <= shape.x + shape.width && y >= shape.y && y <= shape.y + shape.height) {
+                selectedShapeIndex = index;
+            }
+        });
+    
+        // If a shape is selected, highlight it in the tree view
+        if (selectedShapeIndex !== -1) {
+            const selectedShapeId = shapes[selectedShapeIndex].id;
+            const selectedTreeViewElement = document.getElementById(selectedShapeId);
+    
+            // Remove bold styling from all elements in the tree view
+            const treeViewItems = document.querySelectorAll('#ul li');
+            treeViewItems.forEach(item => {
+                item.style.fontWeight = 'normal';
+            });
+    
+            selectedTreeViewElement.style.fontWeight = 'bold';
+        }
+      
+    });
+    </script>
+    
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="nav">
+            <div class="head">
+                <div class="para">Add tooltip</div>
+                <div class="line"></div>
+            </div>
+            <div class="tools">
+                <div class="img"><img src="./img/rec.png" id="rectangle" alt srcset></div>
+                <div class="img"><img src="./img/cir.png" alt srcset draggable="false"></div>
+                <div class="img"><img src="./img/dis3.png" alt srcset></div>
+                <div class="img"><img src="./img/pen4.png" alt srcset></div>
+                <div class="img"><img src="./img/text4.png" alt srcset></div>
+            </div>
+        </div>
+        <div class="content">
+            <canvas id="canvas" width="1400" height="880"></canvas>
+            <div class="content-1">
+                <div class="side">
+                    <!-- <div class="img"><img src="./img/side1.png" alt
+                                srcset></div> -->
+                    <div class="img "><img src="./img/side2.png" alt srcset></div>
+                    <!-- <div class="img"><img src="./img/side3.png" alt
+                                srcset></div> -->
+                </div>
+                <div class="contentZ">
+                    <div class="head">Sheets</div>
+                    <div class="container">
+                        <div class="template">
+                            <div id="div">
+                                <i class="fa fa-sort-down"></i>
+                                <ul class="tem">Template 1
+                                    <ul class="rem" id="ul"></ul>
+                                </ul>
+                            </div>
+                            <!-- <div class="add">+</div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-2">
+                <div class="design">
+                    <div class="p">Design</div>
+                </div>
+                <div class="design">
+                    <div class="p">Text</div>
+                    <select class="dropdown">
+                        <option value="Poppins">Poppins</option>
+                    </select>
+                    <div class="div1">
+                        <select class="dropdown">
+                            <option value="Medium">Medium</option>
+                        </select>
+                        <select class="dropdown">
+                            <option value="12">12</option>
+                        </select>
+                    </div>
+                    <div class="div2">
+                        <div class="align">
+                            <button><img src="./img/align1.png" alt></button>
+                            <button><img src="./img/align2.png" alt></button>
+                            <button><img src="./img/align3.png" alt></button>
+                        </div>
+                        <div class="clr">
+                            <input type="color" class="colorPicker" value="#8C9BAA">
+                            <p class="clrdisplay">#8C9BAA</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="spacing">
+                    <div class="para">Spacing</div>
+                    <div class="outline">
+                        <div class="margin">
+                            <div class="p">MARGIN
+                                <input type="number" class="text" placeholder="0">
+                                <input type="number" class="text" placeholder="0">
+                                <input type="number" class="text" placeholder="0">
+                                <input type="number" class="text" placeholder="0">
+                            </div>
+                            <div class="padding">
+                                <div class="p">PADDING
+                                    <input type="number" class="text" placeholder="0">
+                                    <input type="number" class="text" placeholder="0">
+                                    <input type="number" class="text" placeholder="0">
+                                    <input type="number" class="text" placeholder="0">
+                                </div>
+                                <div class="ele"><i class="fa fa-lock"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contracts">
+                    <div class="para">Constraints</div>
+                    <div class="ele">
+                        <img src="./img/ele1.png" alt>
+                        <img src="./img/ele2.png" alt>
+                        <img src="./img/ele3.png" alt>
+                        <img src="./img/ele4.png" alt>
+                        <img src="./img/ele5.png" alt>
+                        <img src="./img/ele6.png" alt>
+                        <img src="./img/ele7.png" alt>
+                    </div>
+                    <div class="ele-main">
+                        <img src="./img//constraints.png" alt>
+                    </div>
+                    <div class="ele-main">
+                        <img src="./img/Gap.png" alt>
+                    </div>
+                </div>
+                <div class="color">
+                    <div class="para">Selection color</div>
+                    <div class="clr">
+                        <input type="color" class="colorPicker" value="#8C9BAA">
+                        <p class="clrdisplay">#8C9BAA</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // const canvas=document.getElementById('canvas');
+        let colorPickers = document.getElementsByClassName('colorPicker');
+        let clrDisplays = document.getElementsByClassName('clrdisplay');
+        const template = document.querySelector('.rem');
+        const container = document.querySelector('.container');
+        const treeView = document.getElementById('ul');
+        const shapes = [];
+
+        for (let i = 0; i < colorPickers.length; i++) {
+            colorPickers[i].addEventListener("input", function () {
+                const selectedColor = colorPickers[i].value;
+                clrDisplays[i].innerHTML = selectedColor;
+            });
+        }
+        const shapesData = [
+            {
+                id: 1,
+                type: 'rectangle',
+                children: [
+                    {
+                        id: 2,
+                        type: 'circle',
+                        children: []
+                    },
+                    {
+                        id: 3,
+                        type: 'triangle',
+                        children: []
+                    }
+                ]
+            },
+            {
+                id: 4,
+                type: 'triangle',
+                children: [
+                    {
+                        id: 5,
+                        type: 'circle',
+                        children: []
+                    },
+                    {
+                        id: 6,
+                        type: 'rectangle',
+                        children: []
+                    }
+                ]
+            }
+        ];
+
+        function createTree(shapes, parentUl, depth = 0, maxDepth = 10) {
+            shapes.forEach(shape => {
+                const li = document.createElement("li");
+                li.draggable = true;
+                li.id = shape.id;
+                const text = document.createTextNode(shape.type.toUpperCase());
+                li.appendChild(text);
+                if (depth < maxDepth && shape.children && shape.children.length > 0) {
+                    const nestedUl = document.createElement("li");
+                    li.appendChild(nestedUl);
+                    if (parentUl !== nestedUl) {
+                        createTree(shape.children, nestedUl, depth + 1, maxDepth);
+                    }
+                }
+                parentUl.appendChild(li);
+            });
+        }
+        createTree(shapesData, template);
+
+        function createTreeViewItem(id, type) {
+            const li = document.createElement("li");
+            li.draggable = true;
+            li.id = id;
+            const text = document.createTextNode(type.toUpperCase());
+            li.appendChild(text);
+            treeView.appendChild(li);
+            return li;
+        }
+        document.addEventListener("dragstart", function (event) {
+            if (event.target.tagName.toLowerCase() === "li") {
+                event.target.style.opacity = 1;
+                event.dataTransfer.setData("text", event.target.id);
+            }
+        });
+
+        document.addEventListener("dragover", function (event) {
+            event.preventDefault();
+            if (event.target.tagName.toLowerCase() === "li") {
+                event.target.style.border = "1px dashed #000000";
+            }
+        });
+
+        document.addEventListener("drop", function (event) {
+            event.preventDefault();
+            const data = event.dataTransfer.getData("text");
+            const draggedLi = document.getElementById(data);
+            const targetLi = event.target;
+            const isDropTargetInDiv = isElementInDiv(targetLi);
+            // Check if the drop target is an individual parent element in the tree view
+            const isDropTargetParent = targetLi.tagName.toLowerCase() === "li" && targetLi.childElementCount > 0;
+            if (isDropTargetInDiv) {
+                const parentShapeId = parseInt(targetLi.id);
+                const parentShape = shapes.find(shape => shape.id === parentShapeId);
+                // Check if the dragged element is a child element
+                const isChildElement = targetLi.parentNode !== draggedLi.parentNode;
+                if (isChildElement && isDropTargetParent) {
+                    // Remove child functionalities if dropped as an individual parent element
+                    parentShape.children = [];
+                } else {
+                    // Add the dragged element as a child
+                    if (parentShape) {
+                        const childShapeId = shapes.find(shape => shape.id === parseInt(data)).id;
+                        const childShape = shapes.find(shape => shape.id === childShapeId);
+                        if (childShape) {
+                            parentShape.children.push(childShape);
+                        }
+                    }
+                }
+                // Append the dragged element to the drop target
+                targetLi.appendChild(draggedLi);
+            }
+            resetOpacity();
+        });
+
+        document.addEventListener("dragend", function () {
+            resetOpacity();
+        });
+
+        function isElementInDiv(element) {
+            const divContainer = document.getElementById("div");
+            return divContainer.contains(element);
+        }
+
+        function resetOpacity() {
+            const draggableItems = document.querySelectorAll("li");
+            draggableItems.forEach(item => {
+                item.style.opacity = 12;
+                item.style.border = "";
+            });
+        }
+        // treeView.addEventListener('click', (e) => {
+        //     const shapeId = parseInt(e.target.id);
+        //     const selectedShape = shapes.find(shape => shape.id === shapeId);
+
+        //     if (selectedShape) {
+        //         // Clear previous selection
+        //         shapes.forEach(shape => (shape.isSelected = false));
+
+        //         // Mark the selected shape and its children
+        //         markSelectedAndChildren(selectedShape);
+
+        //         // Redraw the container
+        //         // drawCanvas();
+        //     }
+        // });
+        // function markSelectedAndChildren(shape) {
+        //     // Check if the current shape or its children have already been marked as selected
+        //     if (shape.isSelected) {
+        //         return;
+        //     }
+        //     // Mark the current shape as selected
+        //     shape.isSelected = true;
+
+        //     // Recursively mark children
+        //     shape.children.forEach(childShape => {
+        //         markSelectedAndChildren(childShape);
+        //     });
+        // }
+    </script>
+</body>
+
+</html>

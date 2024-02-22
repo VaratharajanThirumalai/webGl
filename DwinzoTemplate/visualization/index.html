@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
@@ -20,32 +18,31 @@
                 <div class="line"></div>
             </div>
             <div class="tools">
-
-                <div class="img active"><img src="./img/rec.png" alt srcset></div>
+                <div class="img"><img src="./img/rec.png" id="rectangle" alt srcset></div>
                 <div class="img"><img src="./img/cir.png" alt srcset draggable="false"></div>
                 <div class="img"><img src="./img/dis3.png" alt srcset></div>
                 <div class="img"><img src="./img/pen4.png" alt srcset></div>
                 <div class="img"><img src="./img/text4.png" alt srcset></div>
-
             </div>
         </div>
-
         <div class="content">
+            <canvas id="canvas" width="1400" height="880"></canvas>
             <div class="content-1">
                 <div class="contentZ">
                     <div class="head">Sheets</div>
                     <div class="container">
                         <div class="template">
-                            <div>
-                               
-                                
+                            <div id="div">
+                                <i class="fa fa-sort-down"></i>
+                                <ul class="tem">Template 1
+                                    <ul class="rem" id="ul"></ul>
+                                </ul>
                             </div>
-                           
+                            <!-- <div class="add">+</div> -->
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="container-2">
                 <div class="design">
                     <div class="p">Design</div>
@@ -64,7 +61,6 @@
                         </select>
                     </div>
                     <div class="div2">
-
                         <div class="align">
                             <button><img src="./img/align1.png" alt></button>
                             <button><img src="./img/align2.png" alt></button>
@@ -86,7 +82,6 @@
                                 <input type="number" class="text" placeholder="0">
                                 <input type="number" class="text" placeholder="0">
                             </div>
-
                             <div class="padding">
                                 <div class="p">PADDING
                                     <input type="number" class="text" placeholder="0">
@@ -117,35 +112,173 @@
                         <img src="./img/Gap.png" alt>
                     </div>
                 </div>
-
                 <div class="color">
                     <div class="para">Selection color</div>
-                    <!-- <select class="dropdown">
-                            <option value="12">#8C9BAA</option>
-                        </select> -->
                     <div class="clr">
                         <input type="color" class="colorPicker" value="#8C9BAA">
                         <p class="clrdisplay">#8C9BAA</p>
                     </div>
-                    <!-- <select class="dropdown">
-                            <option value="12">#8C9BAA</option>
-                        </select> -->
-
                 </div>
             </div>
         </div>
     </div>
     <script>
+        const canvas = document.getElementById('canvas');
         let colorPickers = document.getElementsByClassName('colorPicker');
         let clrDisplays = document.getElementsByClassName('clrdisplay');
+        const template = document.querySelector('.rem');
+        const container = document.querySelector('.container');
+        const treeView = document.getElementById('ul');
+        const shapes = [];
 
         for (let i = 0; i < colorPickers.length; i++) {
             colorPickers[i].addEventListener("input", function () {
                 const selectedColor = colorPickers[i].value;
                 clrDisplays[i].innerHTML = selectedColor;
-                console.log(selectedColor)
             });
         }
+        const shapesData = [
+            {
+                id: 1,
+                type: 'rectangle',
+                children: [
+                    {
+                        id: 2,
+                        type: 'circle',
+                        children: []
+                    },
+                    {
+                        id: 3,
+                        type: 'triangle',
+                        children: []
+                    }
+                ]
+            },
+            {
+                id: 4,
+                type: 'triangle',
+                children: [
+                    {
+                        id: 5,
+                        type: 'circle',
+                        children: []
+                    },
+                    {
+                        id: 6,
+                        type: 'rectangle',
+                        children: []
+                    }
+                ]
+            }
+        ];
+
+        function createTree(shapes, parentUl, depth = 0, maxDepth = 10) {
+            shapes.forEach(shape => {
+                const li = document.createElement("li");
+                li.draggable = true;
+                li.id = shape.id;
+                const text = document.createTextNode(shape.type.toUpperCase());
+                li.appendChild(text);
+                if (depth < maxDepth && shape.children && shape.children.length > 0) {
+                    const nestedUl = document.createElement("ul");
+                    li.appendChild(nestedUl);
+                    if (parentUl !== nestedUl) {
+                        createTree(shape.children, nestedUl, depth + 1, maxDepth);
+                    }
+                }
+                parentUl.appendChild(li);
+            });
+        }
+        createTree(shapesData, template);
+
+        function createTreeViewItem(id, type) {
+            const li = document.createElement("li");
+            li.draggable = true;
+            li.id = id;
+            const text = document.createTextNode(type.toUpperCase());
+            li.appendChild(text);
+            treeView.appendChild(li);
+            return li;
+        }
+        document.addEventListener("click", function (event) {
+            if (event.target.tagName.toLowerCase() === "li") {
+                const clickedLi = event.target;
+                if (clickedLi.childElementCount > 0) {
+                    const nestedUl = clickedLi.querySelector("ul");
+                    if (nestedUl) {
+                        if (nestedUl.style.display === "none") {
+                            nestedUl.style.display = "block";
+                        } else {
+                            nestedUl.style.display = "none";
+                        }
+                    }
+                }
+            }
+        });
+
+        document.addEventListener("dragstart", function (event) {
+            if (event.target.tagName.toLowerCase() === "li") {
+                event.target.style.opacity = 1;
+                event.dataTransfer.setData("text", event.target.id);
+            }
+        });
+
+        document.addEventListener("dragover", function (event) {
+            event.preventDefault();
+            if (event.target.tagName.toLowerCase() === "li") {
+                event.target.style.border = "1px dashed #000000";
+            }
+        });
+
+        document.addEventListener("drop", function (event) {
+            event.preventDefault();
+            const data = event.dataTransfer.getData("text");
+            const draggedLi = document.getElementById(data);
+            const targetLi = event.target;
+            const isDropTargetInDiv = isElementInDiv(targetLi);
+            // Check if the drop target is an individual parent element in the tree view
+            const isDropTargetParent = targetLi.tagName.toLowerCase() === "li" && targetLi.childElementCount > 0;
+            if (isDropTargetInDiv) {
+                const parentShapeId = parseInt(targetLi.id);
+                const parentShape = shapes.find(shape => shape.id === parentShapeId);
+                // Check if the dragged element is a child element
+                const isChildElement = targetLi.parentNode !== draggedLi.parentNode;
+                if (isChildElement && isDropTargetParent) {
+                    // Remove child functionalities if dropped as an individual parent element
+                    parentShape.children = [];
+                } else {
+                    // Add the dragged element as a child
+                    if (parentShape) {
+                        const childShapeId = shapes.find(shape => shape.id === parseInt(data)).id;
+                        const childShape = shapes.find(shape => shape.id === childShapeId);
+                        if (childShape) {
+                            parentShape.children.push(childShape);
+                        }
+                    }
+                }
+                // Append the dragged element to the drop target
+                targetLi.appendChild(draggedLi);
+            }
+            resetOpacity();
+        });
+
+        document.addEventListener("dragend", function () {
+            resetOpacity();
+        });
+
+        function isElementInDiv(element) {
+            const divContainer = document.getElementById("div");
+            return divContainer.contains(element);
+        }
+
+        function resetOpacity() {
+            const draggableItems = document.querySelectorAll("li");
+            draggableItems.forEach(item => {
+                item.style.opacity = 12;
+                item.style.border = "";
+            });
+        }
+
     </script>
 </body>
 

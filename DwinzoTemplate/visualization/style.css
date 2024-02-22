@@ -8,20 +8,32 @@
           user-select: none;
 }
 
+canvas {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
 .container {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(112.68deg, #edf0f2 0%, #edf3f6 100%);
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
   padding-bottom: 20px;
   display: flex;
   flex-direction: column;
   padding-top: 10px;
   padding-bottom: 20px;
   color: #323232;
+  pointer-events: none;
 }
 .container .nav {
   display: flex;
   justify-content: center;
+  pointer-events: all;
+  z-index: 2;
 }
 .container .nav .head {
   display: flex;
@@ -65,8 +77,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.container .nav .tools .img:hover {
+  background: #e3e3e3;
 }
 .container .content {
+  position: relative;
   display: flex;
   justify-content: space-between;
   font-family: Poppins;
@@ -74,17 +92,24 @@
   font-weight: 500;
   color: #323232;
 }
+.container .content canvas {
+  pointer-events: all;
+}
 .container .content .content-1 {
+  pointer-events: all;
+  position: absolute;
+  left: 10px;
   width: 275px;
-  height: 846px;
+  height: calc(100vh - 100px);
   border: 1px solid #cadbec;
   background-color: rgba(242, 242, 242, 0.8);
   border-radius: 20px;
   display: flex;
   font-size: 12px;
+  z-index: 2;
 }
 .container .content .content-1 .side {
-  display: flex;
+  display: none;
   flex-direction: column;
   width: 50px;
   height: 100%;
@@ -110,6 +135,20 @@
   display: flex;
   flex-direction: column;
   padding: 5px;
+  width: 100%;
+  position: relative;
+  pointer-events: all;
+}
+.container .content .content-1 .contentZ .container {
+  width: 100%;
+  height: calc(100% - 60px);
+}
+.container .content .content-1 .contentZ .container .template {
+  pointer-events: all;
+}
+.container .content .content-1 .contentZ .container .template li {
+  list-style-type: none;
+  margin-left: 4px;
 }
 .container .content .content-1 .contentZ .head {
   font-family: Poppins;
@@ -120,7 +159,7 @@
 }
 .container .content .content-1 .contentZ .template {
   padding-right: 10px;
-  width: 212.23px;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -138,18 +177,23 @@
 .container .content .content-1 .contentZ .template .add i {
   font-size: 14px;
   font-weight: 100;
+  cursor: pointer;
 }
 .container .content .content-1 .contentZ .template1 {
   padding-left: 20px;
 }
 .container .content .container-2 {
+  pointer-events: all;
+  position: absolute;
+  right: 10px;
   width: 275px;
-  height: 846px;
+  height: calc(100vh - 100px);
   background-color: rgba(242, 242, 242, 0.8);
   border: 1px solid #cadbec;
   display: flex;
   flex-direction: column;
   border-radius: 20px;
+  z-index: 2;
 }
 .container .content .container-2 .design {
   width: 100%;
@@ -383,6 +427,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  cursor: pointer;
 }
 .container .content .container-2 .contracts {
   border-bottom: 1px solid #cadbec;

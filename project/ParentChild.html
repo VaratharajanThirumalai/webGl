@@ -355,21 +355,22 @@
       shapeBeingScaled = null;
       scalingCorner = null;
     });
-    treeView.addEventListener('click', (e) => {
-      const shapeId = parseInt(e.target.id);
-      const selectedShape = shapes.find(shape => shape.id === shapeId);
 
-      if (selectedShape) {
-        // Clear previous selection
-        shapes.forEach(shape => (shape.isSelected = false));
+    // treeView.addEventListener('click', (e) => {
+    //   const shapeId = parseInt(e.target.id);
+    //   const selectedShape = shapes.find(shape => shape.id === shapeId);
 
-        // Mark the selected shape and its children
-        markSelectedAndChildren(selectedShape);
+    //   if (selectedShape) {
+    //     // Clear previous selection
+    //     shapes.forEach(shape => (shape.isSelected = false));
 
-        // Redraw the canvas
-        drawCanvas();
-      }
-    });
+    //     // Mark the selected shape and its children
+    //     markSelectedAndChildren(selectedShape);
+
+    //     // Redraw the canvas
+    //     // drawCanvas();
+    //   }
+    // });
 
     function markSelectedAndChildren(shape) {
       // Check if the current shape or its children have already been marked as selected

@@ -30,8 +30,10 @@
                     <div class="head">Sheets</div>
                     <div class="container">
                         <div class="template">
-                            <div id="div"> 
-                                <ul class="rem" id="ul"></ul>
+                            <div id="div">
+                                <ul class="rem" id="ul">
+                                    
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -42,6 +44,53 @@
                     <div class="p">Design</div>
                 </div>
                 <div class="design">
+                    <div class="header">Group</div>
+                    <div class="group-container">
+                        <div class="value">
+                            <p>x</p><input type="number" value="0">
+                        </div>
+                        <div class="value">
+                            <p>y</p><input type="number" value="0">
+                        </div>
+                        <div class="value">
+                            <p>w</p><input type="number" value="0">
+                        </div>
+                        <div class="value">
+                            <p>h</p><input type="number" value="0">
+                        </div>
+                        <div class="value">
+                            <p>
+                                <svg class="svg" xmlns="http://www.w3.org/2000/svg" width="8" height="8"
+                                    viewBox="0 0 8 8">
+                                    <path fill="#000" fill-opacity="1" fill-rule="evenodd" stroke="none"
+                                        d="M0 0v8h8V7H5c0-2.21-1.79-4-4-4V0H0zm1 4v3h3c0-1.657-1.343-3-3-3z"></path>
+                                </svg>
+                            </p><input type="number" value="0">
+                        </div>
+                        <div class="value">
+                            <p>
+                                <svg class="svg" xmlns="http://www.w3.org/2000/svg" width="9" height="9"
+                                    viewBox="0 0 9 9">
+                                    <path fill="#000" fill-opacity="1" fill-rule="nonzero" stroke="none"
+                                        d="M9 1H5C2.79 1 1 2.79 1 5v4H0V5c0-2.761 2.239-5 5-5h4v1z"></path>
+                                </svg>
+                            </p><input type="number" value="0"><input type="button" value=">">
+                        </div>
+                    </div>
+                    <div class="border-radius-multiple-conntainer" id="multiple-border">
+                        <div class="value">
+                            <p>TL</p><input type="number" value="0">
+                        </div>
+                        <div class="value">
+                            <p>TR</p><input type="number" value="0">
+                        </div>
+                        <div class="value">
+                            <p>BR</p><input type="number" value="0">
+                        </div>
+                        <div class="value">
+                            <p>BL</p><input type="number" value="0">
+                        </div>
+                    </div>
                     <div class="p">Text</div>
                     <select class="dropdown">
                         <option value="Poppins">Poppins</option>
@@ -162,20 +211,70 @@
                         id: 6,
                         type: 'rectangle',
                         children: []
+                    },
+                    {
+                        id: 7,
+                        type: 'triangle',
+                        children: []
                     }
                 ]
             }
         ];
+
+        // function createTree(shapes, parentUl, depth = 0, maxDepth = 10) {
+        //     shapes.forEach(shape => {
+        //         const li = document.createElement("li");
+        //         li.draggable = true;
+        //         li.id = shape.id;
+        //         const text = document.createTextNode(shape.type.toUpperCase());
+        //         li.appendChild(text);
+        //         if (depth < maxDepth && shape.children && shape.children.length > 0) {
+        //             const nestedUl = document.createElement("ul");
+        //             li.appendChild(nestedUl);
+        //             if (parentUl !== nestedUl) {
+        //                 createTree(shape.children, nestedUl, depth + 1, maxDepth);
+        //             }
+        //         }
+        //         parentUl.appendChild(li);
+        //     });
+        // }
+        // createTree(shapesData, template);
+
+        // treeView.addEventListener("click", function (event) {
+        //     if (event.target.tagName.toLowerCase() === "li") {
+        //         const clickedLi = event.target;
+        //         const nestedUl = clickedLi.querySelector("ul");
+        //         if (nestedUl) {
+        //             nestedUl.style.display = (nestedUl.style.display === "none") ? "block" : "none";
+        //         }
+        //         const nestedLi = clickedLi.querySelector("li");
+        //         if (nestedLi) {
+        //             nestedLi.style.display = (nestedLi.style.display === "none") ? "block" : "none";
+        //         }
+        //     }
+        // });
 
         function createTree(shapes, parentUl, depth = 0, maxDepth = 10) {
             shapes.forEach(shape => {
                 const li = document.createElement("li");
                 li.draggable = true;
                 li.id = shape.id;
+
+                // Create toggle symbol
+                const toggle = document.createElement("span");
+                toggle.classList.add("toggle");
+                toggle.textContent = "+"; 
+                li.appendChild(toggle);
+
                 const text = document.createTextNode(shape.type.toUpperCase());
                 li.appendChild(text);
+
                 if (depth < maxDepth && shape.children && shape.children.length > 0) {
                     const nestedUl = document.createElement("ul");
+                    // const toggle = document.createElement("span");
+                    // toggle.classList.add("toggle");
+                    // toggle.textContent = " <";
+                    // nestedUl.appendChild(toggle);
                     li.appendChild(nestedUl);
                     if (parentUl !== nestedUl) {
                         createTree(shape.children, nestedUl, depth + 1, maxDepth);
@@ -184,7 +283,25 @@
                 parentUl.appendChild(li);
             });
         }
+
         createTree(shapesData, template);
+
+        treeView.addEventListener("click", function (event) {
+            if (event.target.tagName.toLowerCase() === "span" && event.target.classList.contains("toggle")) {
+                const toggleSymbol = event.target;
+                const clickedLi = toggleSymbol.parentElement;
+                const nestedUl = clickedLi.querySelector("ul");
+                if (nestedUl) {
+                    nestedUl.style.display = (nestedUl.style.display === "none") ? "block" : "none";
+                    toggleSymbol.textContent = (toggleSymbol.textContent === "+") ? "-" : "+";
+                }
+                const nestedLi = clickedLi.querySelector("li");
+                if (nestedLi) {
+                    nestedLi.style.display = (nestedLi.style.display === "none") ? "block" : "none";
+                    toggleSymbol.textContent = (toggleSymbol.textContent === "+") ? "-" : "+";
+                }
+            }
+        });
 
         function createTreeViewItem(id, type) {
             const li = document.createElement("li");
@@ -195,31 +312,6 @@
             treeView.appendChild(li);
             return li;
         }
-
-        
-        treeView.addEventListener("click", function (event) {
-            if (event.target.tagName.toLowerCase() === "li") {
-                const clickedLi = event.target;
-                if (clickedLi.childElementCount > 0) {
-                    const nestedUl = clickedLi.querySelector( "ul");
-                    if (nestedUl) {
-                        if (nestedUl.style.display === "none") {
-                            nestedUl.style.display = "block";
-                        } else {
-                            nestedUl.style.display = "none";
-                        }
-                    }
-                    const nestedli = clickedLi.querySelector("li");
-                    if (nestedli) {
-                        if (nestedli.style.display === "none") {
-                            nestedli.style.display = "block";
-                        } else {
-                            nestedli.style.display = "none";
-                        }
-                    }
-                }
-            }
-        });
 
         document.addEventListener("dragstart", function (event) {
             if (event.target.tagName.toLowerCase() === "li") {
@@ -283,7 +375,6 @@
                 item.style.border = "";
             });
         }
-
     </script>
 </body>
 

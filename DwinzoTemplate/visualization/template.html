@@ -437,24 +437,14 @@
         <div class="content">
             <canvas id="canvas" width="1400" height="880"></canvas>
             <div class="content-1">
-                <div class="side">
-                    <!-- <div class="img"><img src="./img/side1.png" alt
-                                srcset></div> -->
-                    <div class="img "><img src="./img/side2.png" alt srcset></div>
-                    <!-- <div class="img"><img src="./img/side3.png" alt
-                                srcset></div> -->
-                </div>
+              
                 <div class="contentZ">
                     <div class="head">Sheets</div>
                     <div class="container">
                         <div class="template">
                             <div id="div">
-                                <i class="fa fa-sort-down"></i>
-                                <ul class="tem">Template 1
                                     <ul class="rem" id="ul"></ul>
-                                </ul>
                             </div>
-                            <!-- <div class="add">+</div> -->
                         </div>
                     </div>
                 </div>
@@ -606,78 +596,90 @@
             });
         }
         createTree(shapesData, template);
-
-        function createTreeViewItem(id, type) {
-            const li = document.createElement("li");
-            li.draggable = true;
-            li.id = id;
-            const text = document.createTextNode(type.toUpperCase());
-            li.appendChild(text);
-            treeView.appendChild(li);
-            return li;
-        }
-        document.addEventListener("dragstart", function (event) {
-            if (event.target.tagName.toLowerCase() === "li") {
-                event.target.style.opacity = 1;
-                event.dataTransfer.setData("text", event.target.id);
-            }
-        });
-
-        document.addEventListener("dragover", function (event) {
-            event.preventDefault();
-            if (event.target.tagName.toLowerCase() === "li") {
-                event.target.style.border = "1px dashed #000000";
-            }
-        });
-
-        document.addEventListener("drop", function (event) {
-            event.preventDefault();
-            const data = event.dataTransfer.getData("text");
-            const draggedLi = document.getElementById(data);
-            const targetLi = event.target;
-            const isDropTargetInDiv = isElementInDiv(targetLi);
-            // Check if the drop target is an individual parent element in the tree view
-            const isDropTargetParent = targetLi.tagName.toLowerCase() === "li" && targetLi.childElementCount > 0;
-            if (isDropTargetInDiv) {
-                const parentShapeId = parseInt(targetLi.id);
-                const parentShape = shapes.find(shape => shape.id === parentShapeId);
-                // Check if the dragged element is a child element
-                const isChildElement = targetLi.parentNode !== draggedLi.parentNode;
-                if (isChildElement && isDropTargetParent) {
-                    // Remove child functionalities if dropped as an individual parent element
-                    parentShape.children = [];
-                } else {
-                    // Add the dragged element as a child
-                    if (parentShape) {
-                        const childShapeId = shapes.find(shape => shape.id === parseInt(data)).id;
-                        const childShape = shapes.find(shape => shape.id === childShapeId);
-                        if (childShape) {
-                            parentShape.children.push(childShape);
-                        }
+        treeView.addEventListener("click", function (event) {
+                if (event.target.tagName.toLowerCase() === "li") {
+                    const clickedLi = event.target;
+                    const nestedUl = clickedLi.querySelector("ul");
+                    if (nestedUl) {
+                        nestedUl.style.display = (nestedUl.style.display === "none") ? "block" : "none";
+                    }
+                    const nestedLi = clickedLi.querySelector("li");
+                    if (nestedLi) {
+                        nestedLi.style.display = (nestedLi.style.display === "none") ? "block" : "none";
                     }
                 }
-                // Append the dragged element to the drop target
-                targetLi.appendChild(draggedLi);
-            }
-            resetOpacity();
-        });
-
-        document.addEventListener("dragend", function () {
-            resetOpacity();
-        });
-
-        function isElementInDiv(element) {
-            const divContainer = document.getElementById("div");
-            return divContainer.contains(element);
-        }
-
-        function resetOpacity() {
-            const draggableItems = document.querySelectorAll("li");
-            draggableItems.forEach(item => {
-                item.style.opacity = 12;
-                item.style.border = "";
             });
-        }
+            function createTreeViewItem(id, type) {
+                const li = document.createElement("li");
+                li.draggable = true;
+                li.id = id;
+                const text = document.createTextNode(type.toUpperCase());
+                li.appendChild(text);
+                treeView.appendChild(li);
+                return li;
+            }
+            document.addEventListener("dragstart", function (event) {
+                if (event.target.tagName.toLowerCase() === "li") {
+                    event.target.style.opacity = 1;
+                    event.dataTransfer.setData("text", event.target.id);
+                }
+            });
+
+            document.addEventListener("dragover", function (event) {
+                event.preventDefault();
+                if (event.target.tagName.toLowerCase() === "li") {
+                    event.target.style.border = "1px dashed #000000";
+                }
+            });
+
+            document.addEventListener("drop", function (event) {
+                event.preventDefault();
+                const data = event.dataTransfer.getData("text");
+                const draggedLi = document.getElementById(data);
+                const targetLi = event.target;
+                const isDropTargetInDiv = isElementInDiv(targetLi);
+                // Check if the drop target is an individual parent element in the tree view
+                const isDropTargetParent = targetLi.tagName.toLowerCase() === "li" && targetLi.childElementCount > 0;
+                if (isDropTargetInDiv) {
+                    const parentShapeId = parseInt(targetLi.id);
+                    const parentShape = shapes.find(shape => shape.id === parentShapeId);
+                    // Check if the dragged element is a child element
+                    const isChildElement = targetLi.parentNode !== draggedLi.parentNode;
+                    if (isChildElement && isDropTargetParent) {
+                        // Remove child functionalities if dropped as an individual parent element
+                        parentShape.children = [];
+                    } else {
+                        // Add the dragged element as a child
+                        if (parentShape) {
+                            const childShapeId = shapes.find(shape => shape.id === parseInt(data)).id;
+                            const childShape = shapes.find(shape => shape.id === childShapeId);
+                            if (childShape) {
+                                parentShape.children.push(childShape);
+                            }
+                        }
+                    }
+                    // Append the dragged element to the drop target
+                    targetLi.appendChild(draggedLi);
+                }
+                resetOpacity();
+            });
+
+            document.addEventListener("dragend", function () {
+                resetOpacity();
+            });
+
+            function isElementInDiv(element) {
+                const divContainer = document.getElementById("div");
+                return divContainer.contains(element);
+            }
+
+            function resetOpacity() {
+                const draggableItems = document.querySelectorAll("li");
+                draggableItems.forEach(item => {
+                    item.style.opacity = 12;
+                    item.style.border = "";
+                });
+            }
         // treeView.addEventListener('click', (e) => {
         //     const shapeId = parseInt(e.target.id);
         //     const selectedShape = shapes.find(shape => shape.id === shapeId);

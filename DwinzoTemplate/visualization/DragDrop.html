@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="nav">
+            <div class="head">
+                <div class="para">Add tooltip</div>
+                <div class="line"></div>
+            </div>
+            <div class="tools">
+                <div class="img"><img src="./img/rec.png" id="rectangle" onclick="Drop.rectangle()" alt srcset></div>
+                <div class="img"><img src="./img/cir.png" id="circle"  onclick="Drop.circle()" alt srcset draggable="false"></div>
+                <div class="img"><img src="./img/dis3.png" alt srcset></div>
+                <div class="img"><img src="./img/pen4.png" alt srcset></div>
+                <div class="img"><img src="./img/text4.png" alt srcset></div>
+            </div>
+        </div>
+        <div class="content">
+            <canvas id="canvas" width="1400" height="880"></canvas>
+            <div class="content-1">
+              
+                <div class="contentZ">
+                    <div class="head">Sheets</div>
+                    <div class="container">
+                        <div class="template" id="div" >
+                            <div >
+                                    <ul class="rem" id="ul">
+                                    </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-2">
+                <div class="design">
+                    <div class="p">Design</div>
+                </div>
+                <div class="design">
+                    <div class="p">Text</div>
+                    <select class="dropdown">
+                        <option value="Poppins">Poppins</option>
+                    </select>
+                    <div class="div1">
+                        <select class="dropdown">
+                            <option value="Medium">Medium</option>
+                        </select>
+                        <select class="dropdown">
+                            <option value="12">12</option>
+                        </select>
+                    </div>
+                    <div class="div2">
+                        <div class="align">
+                            <button><img src="./img/align1.png" alt></button>
+                            <button><img src="./img/align2.png" alt></button>
+                            <button><img src="./img/align3.png" alt></button>
+                        </div>
+                        <div class="clr">
+                            <input type="color" class="colorPicker" value="#8C9BAA">
+                            <p class="clrdisplay">#8C9BAA</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="spacing">
+                    <div class="para">Spacing</div>
+                    <div class="outline">
+                        <div class="margin">
+                            <div class="p">MARGIN
+                                <input type="number" class="text" placeholder="0">
+                                <input type="number" class="text" placeholder="0">
+                                <input type="number" class="text" placeholder="0">
+                                <input type="number" class="text" placeholder="0">
+                            </div>
+                            <div class="padding">
+                                <div class="p">PADDING
+                                    <input type="number" class="text" placeholder="0">
+                                    <input type="number" class="text" placeholder="0">
+                                    <input type="number" class="text" placeholder="0">
+                                    <input type="number" class="text" placeholder="0">
+                                </div>
+                                <div class="ele"><i class="fa fa-lock"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contracts">
+                    <div class="para">Constraints</div>
+                    <div class="ele">
+                        <img src="./img/ele1.png" alt>
+                        <img src="./img/ele2.png" alt>
+                        <img src="./img/ele3.png" alt>
+                        <img src="./img/ele4.png" alt>
+                        <img src="./img/ele5.png" alt>
+                        <img src="./img/ele6.png" alt>
+                        <img src="./img/ele7.png" alt>
+                    </div>
+                    <div class="ele-main">
+                        <img src="./img//constraints.png" alt>
+                    </div>
+                    <div class="ele-main">
+                        <img src="./img/Gap.png" alt>
+                    </div>
+                </div>
+                <div class="color">
+                    <div class="para">Selection color</div>
+                    <div class="clr">
+                        <input type="color" class="colorPicker" value="#8C9BAA">
+                        <p class="clrdisplay">#8C9BAA</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./script.js"></script>
+    <!-- <script src="./Frame.js"></script> -->
+
+</body>
+</html>

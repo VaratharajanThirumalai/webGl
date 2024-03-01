@@ -145,18 +145,25 @@
       }
     }
     
-    let text;
-    function checkType(output) {
-      let div1 = document.createElement("li");
-      div1.draggable = true;
-      div1.id = shapeIdCounter - 1; // Set the ID of the li to match the shape ID
-      if (output == 1) {
-        text = document.createTextNode(`RECTANGLE`);
-      } else if (output == 2) {
-        text = document.createTextNode(`CIRCLE`);
-      };
-      div1.appendChild(text);
-      treeView.appendChild(div1);
+    function drawCanvas() {
+      gl.clearRect(0, 0, canvas.width, canvas.height);
+      shapes.forEach(shape => {
+        gl.fillStyle = shape.color;
+        if (shape.type === 'rectangle') {
+          gl.fillRect(shape.x, shape.y, shape.width, shape.height);
+        } else if (shape.type === 'circle') {
+          gl.beginPath();
+          gl.arc(shape.x + shape.width / 2, shape.y + shape.height / 2, shape.width / 2, 0, 2 * Math.PI);
+          gl.closePath();
+          gl.fill();
+        }
+        // Highlight the selected shape and its children
+        if (shape.isSelected) {
+          gl.strokeStyle = 'transparent';
+          gl.lineWidth = 5;
+          gl.strokeRect(shape.x - 5, shape.y - 5, shape.width + 10, shape.height + 10);
+        }
+      });
     }
     function drawDefaultShapes(output) {
       const id = shapeIdCounter++;
@@ -177,25 +184,18 @@
       drawCanvas();
       drawTreeView();
     }
-    function drawCanvas() {
-      gl.clearRect(0, 0, canvas.width, canvas.height);
-      shapes.forEach(shape => {
-        gl.fillStyle = shape.color;
-        if (shape.type === 'rectangle') {
-          gl.fillRect(shape.x, shape.y, shape.width, shape.height);
-        } else if (shape.type === 'circle') {
-          gl.beginPath();
-          gl.arc(shape.x + shape.width / 2, shape.y + shape.height / 2, shape.width / 2, 0, 2 * Math.PI);
-          gl.closePath();
-          gl.fill();
-        }
-        // Highlight the selected shape and its children
-        if (shape.isSelected) {
-          gl.strokeStyle = 'transparent';
-          gl.lineWidth = 5;
-          gl.strokeRect(shape.x - 5, shape.y - 5, shape.width + 10, shape.height + 10);
-        }
-      });
+    let text;
+    function checkType(output) {
+      let div1 = document.createElement("li");
+      div1.draggable = true;
+      div1.id = shapeIdCounter - 1; // Set the ID of the li to match the shape ID
+      if (output == 1) {
+        text = document.createTextNode(`RECTANGLE`);
+      } else if (output == 2) {
+        text = document.createTextNode(`CIRCLE`);
+      };
+      div1.appendChild(text);
+      treeView.appendChild(div1);
     }
     function createTree(shapes, parentUl, depth = 0, maxDepth = 10) {
       shapes.forEach(shape => {

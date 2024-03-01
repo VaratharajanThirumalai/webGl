@@ -36,7 +36,7 @@ class Drag {
             const text = document.createTextNode(shape.type.toUpperCase());
             li.appendChild(text);
             if (depth < maxDepth && shape.children && shape.children.length > 0) {
-                const nestedUl = document.createElement("li");
+                const nestedUl = document.createElement("ul");
                 li.appendChild(nestedUl);
                 if (parentUl !== nestedUl) {
                     this.createTree(shape.children, nestedUl, depth + 1, maxDepth);
@@ -101,11 +101,11 @@ Drop.createTree(shapesData, template);
 treeView.addEventListener("click", function (event) {
     if (event.target.tagName.toLowerCase() === "li") {
         const clickedLi = event.target;
-        const nestedUl = clickedLi.querySelector("ul");
+        const nestedUl = clickedLi.querySelectorAll(`"#ul li"`);
         if (nestedUl) {
             nestedUl.style.display = (nestedUl.style.display === "none") ? "block" : "none";
         }
-        const nestedLi = clickedLi.querySelector("li");
+        const nestedLi = clickedLi.querySelector(`"#li ul"`);
         if (nestedLi) {
             nestedLi.style.display = (nestedLi.style.display === "none") ? "block" : "none";
         }

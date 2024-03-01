@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="nav">
+            <div class="head">
+                <div class="para">Add tooltip</div>
+                <div class="line"></div>
+            </div>
+            <div class="tools">
+                <div class="img" id="rect"><img src="./img/rec.png" alt srcset></div>
+                <div class="img" id="cir"><img src="./img/cir.png" alt srcset draggable="false"></div>
+                <div class="img" id="frame"><img src="./img/dis3.png" alt srcset></div>
+                <div class="img" id="pen"><img src="./img/pen4.png" alt srcset></div>
+                <div class="img" id="text"><img src="./img/text4.png" alt srcset></div>
+            </div>
+        </div>
+        <div class="content">
+            <canvas id="canvas" width="1400" height="880"></canvas>
+            <div class="content-1">
+
+                <div class="contentZ">
+                    <div class="head">Sheets</div>
+                    <div class="container">
+                        <div class="template">
+                            <div id="div">
+                                <ul class="rem" id="ul"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-2">
+                <div class="design">
+                    <div class="p">Design</div>
+                </div>
+                <div class="design">
+                    <div class="header">Group</div>
+                    <div class="group-container">
+                        <div class="value"><p>x</p><input type="number" id="x-value" value="0"></div>
+                        <div class="value"><p>y</p><input type="number" id="y-value" value="0"></div>
+                        <div class="value"><p>w</p><input type="number" id="w-value" value="0"></div>
+                        <div class="value"><p>h</p><input type="number" id="h-value" value="0"></div>
+                        <div class="value"><p>
+                                <svg class="svg" xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><path fill="#000" fill-opacity="1" fill-rule="evenodd" stroke="none" d="M0 0v8h8V7H5c0-2.21-1.79-4-4-4V0H0zm1 4v3h3c0-1.657-1.343-3-3-3z"></path></svg>
+                            </p><input type="number" value="0"></div>
+                        <div class="value"><p>
+                                <svg class="svg" xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9"><path fill="#000" fill-opacity="1" fill-rule="nonzero" stroke="none" d="M9 1H5C2.79 1 1 2.79 1 5v4H0V5c0-2.761 2.239-5 5-5h4v1z"></path></svg>
+                            </p><input type="number" value="0"><input type="button" value=">"></div>
+                    </div>
+                    <div class="border-radius-multiple-conntainer" id="multiple-border">
+                        <div class="value"><p>TL</p><input type="number" value="0"></div>
+                        <div class="value"><p>TR</p><input type="number" value="0"></div>
+                        <div class="value"><p>BR</p><input type="number" value="0"></div>
+                        <div class="value"><p>BL</p><input type="number" value="0"></div>
+                    </div>
+                    <div class="p">Text</div>
+                    <select class="dropdown">
+                        <option value="Poppins">Poppins</option>
+                    </select>
+                    <div class="div1">
+                        <select class="dropdown">
+                            <option value="Medium">Medium</option>
+                        </select>
+                        <select class="dropdown">
+                            <option value="12">12</option>
+                        </select>
+                    </div>
+                    <div class="div2">
+                        <div class="align">
+                            <button><img src="./img/align1.png" alt></button>
+                            <button><img src="./img/align2.png" alt></button>
+                            <button><img src="./img/align3.png" alt></button>
+                        </div>
+                        <div class="clr">
+                            <input type="color" class="colorPicker" value="#8C9BAA">
+                            <p class="clrdisplay">#8C9BAA</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="spacing">
+                    <div class="para">Spacing</div>
+                    <div class="outline">
+                        <div class="margin">
+                            <div class="p">MARGIN
+                                <input type="number" class="text" placeholder="0">
+                                <input type="number" class="text" placeholder="0">
+                                <input type="number" class="text" placeholder="0">
+                                <input type="number" class="text" placeholder="0">
+                            </div>
+                            <div class="padding">
+                                <div class="p">PADDING
+                                    <input type="number" class="text" placeholder="0">
+                                    <input type="number" class="text" placeholder="0">
+                                    <input type="number" class="text" placeholder="0">
+                                    <input type="number" class="text" placeholder="0">
+                                </div>
+                                <div class="ele"><i class="fa fa-lock"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contracts">
+                    <div class="para">Constraints</div>
+                    <div class="ele">
+                        <img src="./img/ele1.png" alt>
+                        <img src="./img/ele2.png" alt>
+                        <img src="./img/ele3.png" alt>
+                        <img src="./img/ele4.png" alt>
+                        <img src="./img/ele5.png" alt>
+                        <img src="./img/ele6.png" alt>
+                        <img src="./img/ele7.png" alt>
+                    </div>
+                    <div class="ele-main">
+                        <img src="./img//constraints.png" alt>
+                    </div>
+                    <div class="ele-main">
+                        <img src="./img/Gap.png" alt>
+                    </div>
+                </div>
+                <div class="color">
+                    <div class="para">Selection color</div>
+                    <div class="clr">
+                        <input type="color" class="colorPicker" value="#8C9BAA">
+                        <p class="clrdisplay">#8C9BAA</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    let canvas = document.getElementById('canvas');
+    let gl = canvas.getContext('2d');
+    let shapes = [];
+    let startX, startY, currentFrame;
+    let isMovingFrame = false;
+    let selectedFrameIndex = -1;
+    let offsetX, offsetY;
+    let frames = [];
+    let isResizingFrame;
+    let selectedScalingPointIndex = -1;
+    let isDrawing;
+    let isDrawingRectangle = false;
+    let isDrawingCircle = false;
+    let nextShapeId = 1;
+    let nextFrameId = 1;
+    let colorPickers = document.getElementsByClassName('colorPicker');
+    let clrDisplays = document.getElementsByClassName('clrdisplay');
+    const template = document.querySelector('.rem');
+    const container = document.querySelector('.container');
+    const treeView = document.getElementById('ul');
+    for (let i = 0; i < colorPickers.length; i++) {
+        colorPickers[i].addEventListener("input", function () {
+            const selectedColor = colorPickers[i].value;
+            clrDisplays[i].innerHTML = selectedColor;
+        });
+    }
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        drawCanvas();
+    });
+    // Event listeners for drawing frames and shapes
+    document.getElementById('frame').addEventListener('click', function frame() {
+        // Event listeners for drawing frames
+        canvas.addEventListener('mousedown', function event(e) {
+            isDrawing = true;
+            startX = e.clientX - canvas.offsetLeft;
+            startY = e.clientY - canvas.offsetTop;
+            canvas.removeEventListener('mousedown', event);
+        });
+        canvas.addEventListener('mousemove', function eventHandlers(e) {
+            if (!isDrawing) return;
+
+            const x = e.clientX - canvas.offsetLeft;
+            const y = e.clientY - canvas.offsetTop;
+            const width = x - startX;
+            const height = y - startY;
+            gl.strokeStyle = 'black';
+            gl.fillStyle = 'transparent';
+            gl.strokeRect(startX, startY, width, height);
+            gl.fillRect(startX, startY, width, height);
+            currentFrame = { x: startX, y: startY, width, height };
+        });
+        canvas.addEventListener('mouseup', function eventHandler(e) {
+            if (!isDrawing) return;
+
+            isDrawing = false;
+            if (currentFrame.width > 0 && currentFrame.height > 0) {
+                frames.push({
+                    id: generateFrameId(),
+                    x: currentFrame.x,
+                    y: currentFrame.y,
+                    width: currentFrame.width,
+                    height: currentFrame.height,
+                });
+            }
+            drawCanvas();
+            updateTreeViewItem(currentFrame); // Update tree view after adding a frame
+        });
+    });
+
+    // Event listeners for drawing rectangles and circles
+    document.getElementById('rect').addEventListener('click', function () {
+        isDrawingRectangle = true;
+        isDrawingCircle = false;
+    });
+
+    document.getElementById('cir').addEventListener('click', function () {
+        isDrawingCircle = true;
+        isDrawingRectangle = false;
+    });
+
+    // Function to generate unique shape IDs
+    function generateShapeId() {
+        return nextShapeId++;
+    }
+
+    // Function to generate unique frame IDs
+    function generateFrameId() {
+        return nextFrameId++;
+    }
+
+    // Function to draw canvas
+    function drawCanvas() {
+        gl.clearRect(0, 0, canvas.width, canvas.height);
+        frames.forEach((frame, index) => {
+            gl.strokeRect(frame.x, frame.y, frame.width, frame.height);
+            document.getElementById('x-value').value = frame.x;
+            document.getElementById('y-value').value = frame.y;
+            document.getElementById('w-value').value = frame.width;
+            document.getElementById('h-value').value = frame.height;
+            gl.font = "15px Verdana";
+            gl.fillStyle = 'grey';
+            gl.fillText(`${frame.width} × ${frame.height}`, frame.x + (frame.width / 2.5), frame.y - 10);
+            gl.fillText(`Frame ${index + 1}`, frame.x + (frame.width / 2.5), frame.y + frame.height + 20);
+            gl.fillRect(frame.x, frame.y, frame.width, frame.height);
+        });
+        shapes.forEach((shape) => {
+            gl.fillStyle = shape.color;
+            if (shape.type === 'rectangle') {
+                gl.fillRect(shape.x, shape.y, shape.width, shape.height);
+            } else if (shape.type === 'circle') {
+                gl.beginPath();
+                gl.arc(
+                    shape.x + shape.width / 2,
+                    shape.y + shape.height / 2,
+                    shape.width / 2,
+                    0,
+                    2 * Math.PI
+                );
+                gl.closePath();
+                gl.fill();
+            }
+        });
+    }
+
+    canvas.addEventListener('mousemove', function eventHandlers(e) {
+    const mouseX = e.clientX - canvas.offsetLeft;
+    const mouseY = e.clientY - canvas.offsetTop;
+    if (isMovingFrame && selectedFrameIndex !== -1) {
+        const frame = frames[selectedFrameIndex];
+        const deltaX = mouseX - offsetX - frame.x;
+        const deltaY = mouseY - offsetY - frame.y;
+        frame.x = mouseX - offsetX;
+        frame.y = mouseY - offsetY;
+        shapes.forEach((shape) => {
+            if (
+                shape.x >= frame.x &&
+                shape.x + shape.width <= frame.x + frame.width &&
+                shape.y >= frame.y &&
+                shape.y + shape.height <= frame.y + frame.height
+            ) {
+                shape.x += deltaX;
+                shape.y += deltaY;
+            }
+        });
+        drawCanvas();
+    } else {
+        // Move selected shape
+        shapes.forEach((shape) => {
+            if (shape.isSelected) {
+                const deltaX = mouseX - shape.x - shape.offsetX;
+                const deltaY = mouseY - shape.y - shape.offsetY;
+                shape.x += deltaX;
+                shape.y += deltaY;
+                shape.offsetX = mouseX - shape.x;
+                shape.offsetY = mouseY - shape.y;
+            }
+        });
+        drawCanvas();
+    }
+});
+    // Event listener for handling mouse click
+    canvas.addEventListener('mousedown', function event(e) {
+        const mouseX = e.clientX - canvas.offsetLeft;
+        const mouseY = e.clientY - canvas.offsetTop;
+        if (isDrawingRectangle || isDrawingCircle) {
+            startX = mouseX;
+            startY = mouseY;
+            isDrawing = true;
+        } else {
+            let shapeClicked = false;
+            shapes.forEach((shape) => {
+                if (
+                    mouseX >= shape.x &&
+                    mouseX <= shape.x + shape.width &&
+                    mouseY >= shape.y &&
+                    mouseY <= shape.y + shape.height
+                ) {
+                    shape.isSelected = true;
+                    shape.offsetX = mouseX - shape.x;
+                    shape.offsetY = mouseY - shape.y;
+                    shapeClicked = true;
+                } else {
+                    shape.isSelected = false;
+                }
+            });
+            if (!shapeClicked) {
+                frames.forEach((frame, index) => {
+                    if (
+                        mouseX >= frame.x &&
+                        mouseX <= frame.x + frame.width &&
+                        mouseY >= frame.y &&
+                        mouseY <= frame.y + frame.height
+                    ) {
+                        isMovingFrame = true;
+                        selectedFrameIndex = index;
+                        offsetX = mouseX - frame.x;
+                        offsetY = mouseY - frame.y;
+                    }
+                });
+            }
+        }
+    });
+
+    // Event listener for handling mouse release
+    canvas.addEventListener('mouseup', function eventHandler(e) {
+        if (isDrawingRectangle || isDrawingCircle) {
+            const mouseX = e.clientX - canvas.offsetLeft;
+            const mouseY = e.clientY - canvas.offsetTop;
+            const width = mouseX - startX;
+            const height = mouseY - startY;
+            if (width !== 0 && height !== 0) {
+                if (isDrawingRectangle) {
+                    const newShape = { id: generateShapeId(), x: startX, y: startY, width: width, height: height, type: 'rectangle', color: 'blue' };
+                    shapes.push(newShape);
+                    updateTreeViewItem(newShape);
+                } else if (isDrawingCircle) {
+                    const newShape = { id: generateShapeId(), x: startX, y: startY, width: width, height: height, type: 'circle', color: 'green' };
+                    shapes.push(newShape);
+                    updateTreeViewItem(newShape);
+                }
+                drawCanvas();
+            }
+            isDrawingRectangle = false;
+            isDrawingCircle = false;
+            isDrawing = false;
+        } else {
+            isMovingFrame = false;
+        isResizingFrame = false;
+        selectedFrameIndex = -1;
+        selectedScalingPointIndex = -1;
+        }
+        shapes.forEach((shape) => {
+            shape.isSelected = false;
+        });
+    });
+
+    function updateTreeViewItem(item) {
+        const ul = document.getElementById('ul');
+        const li = document.createElement('li');
+        if (item.type === 'rectangle' || item.type === 'circle') {
+            li.textContent = ` ${item.type}`;
+        } else {
+            li.textContent = `Frame (${item.width} × ${item.height})`;
+        }
+        ul.appendChild(li);
+    }
+
+    // Drag and drop functionality
+    document.addEventListener("dragstart", function (event) {
+        if (event.target.tagName.toLowerCase() === "li") {
+            event.target.style.opacity = 1;
+            event.dataTransfer.setData("text", event.target.id);
+        }
+    });
+
+    document.addEventListener("dragover", function (event) {
+        event.preventDefault();
+        if (event.target.tagName.toLowerCase() === "li") {
+            event.target.style.border = "1px dashed #000000";
+        }
+    });
+
+    document.addEventListener("drop", function (event) {
+        event.preventDefault();
+        const data = event.dataTransfer.getData("text");
+        const draggedLi = document.getElementById(data);
+        const targetLi = event.target;
+        const isDropTargetInDiv = isElementInDiv(targetLi);
+        // Check if the drop target is an individual parent element in the tree view
+        const isDropTargetParent = targetLi.tagName.toLowerCase() === "li" && targetLi.childElementCount > 0;
+        if (isDropTargetInDiv) {
+            const parentShapeId = parseInt(targetLi.id);
+            const parentShape = shapes.find(shape => shape.id === parentShapeId);
+            // Check if the dragged element is a child element
+            const isChildElement = targetLi.parentNode !== draggedLi.parentNode;
+            if (isChildElement && isDropTargetParent) {
+                // Remove child functionalities if dropped as an individual parent element
+                parentShape.children = [];
+            } else {
+                // Add the dragged element as a child
+                if (parentShape) {
+                    const childShapeId = shapes.find(shape => shape.id === parseInt(data)).id;
+                    const childShape = shapes.find(shape => shape.id === childShapeId);
+                    if (childShape) {
+                        parentShape.children.push(childShape);
+                    }
+                }
+            }
+            // Append the dragged element to the drop target
+            targetLi.appendChild(draggedLi);
+        }
+        resetOpacity();
+    });
+
+    document.addEventListener("dragend", function () {
+        resetOpacity();
+    });
+
+    function isElementInDiv(element) {
+        const divContainer = document.getElementById("div");
+        return divContainer.contains(element);
+    }
+
+    function resetOpacity() {
+        const draggableItems = document.querySelectorAll("li");
+        draggableItems.forEach(item => {
+            item.style.opacity = 12;
+            item.style.border = "";
+        });
+    }
+});
+    // Function to update the tree view with shapes and frames
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container" id="contain">
+        <div class="nav">
+            <div class="head">
+                <div class="para">Add tooltip</div> 
+                <div class="line"></div>
+            </div>
+            <div class="tools">
+                <div class="img" id="rect" ><img src="./img/rec.png" alt srcset></div>
+                <div class="img" id="cir" ><img src="./img/cir.png" alt srcset draggable="false"></div>
+                <button class="img" id="frame" ><img src="./img/dis3.png" alt srcset></button>
+                <div class="img" id="pen" ><img src="./img/pen4.png" alt srcset></div>
+                <div class="img" id="text" ><img src="./img/text4.png" alt srcset></div>
+            </div>
+        </div>
+
+        <div class="content">
+            <canvas id="canvas"></canvas>
+            <div class="content-1">
+                <div class="side">
+                    <!-- <div class="img"><img src="./img/side1.png" alt
+                                srcset></div> -->
+                    <div class="img "><img src="./img/side2.png" alt srcset></div>
+                    <!-- <div class="img"><img src="./img/side3.png" alt
+                                srcset></div> -->
+                </div>
+                <div class="contentZ">
+                    <div class="head">Sheets</div>
+                    <div class="container">
+                        <div class="template">
+                            <div>
+                                <i class="fa fa-sort-down"></i>
+                                <div class="tem">Template 1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-2">
+                <div class="container-header">
+                    <div class="p">Design</div>
+                </div>
+                <div class="design">
+                    <div class="header">Group</div>
+                    <div class="group-container">
+                        <div class="value"><p>x</p><input type="number" id="x-value" value="0"></div>
+                        <div class="value"><p>y</p><input type="number" id="y-value" value="0"></div>
+                        <div class="value"><p>w</p><input type="number" id="w-value" value="0"></div>
+                        <div class="value"><p>h</p><input type="number" id="h-value" value="0"></div>
+                        <div class="value"><p>
+                            <svg class="svg" xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8"><path fill="#000" fill-opacity="1" fill-rule="evenodd" stroke="none" d="M0 0v8h8V7H5c0-2.21-1.79-4-4-4V0H0zm1 4v3h3c0-1.657-1.343-3-3-3z"></path></svg>
+                        </p><input type="number" id="angle" value="0"></div>
+                        <div class="value"><p>
+                            <svg class="svg" xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9"><path fill="#000" fill-opacity="1" fill-rule="nonzero" stroke="none" d="M9 1H5C2.79 1 1 2.79 1 5v4H0V5c0-2.761 2.239-5 5-5h4v1z"></path></svg>
+                        </p><input type="number" value="0"><input type="button" value=">"></div>
+                    </div>
+                    <div class="border-radius-multiple-conntainer" id="multiple-border">
+                        <div class="value"><p>TL</p><input type="number" value="0"></div>
+                        <div class="value"><p>TR</p><input type="number" value="0"></div>
+                        <div class="value"><p>BR</p><input type="number" value="0"></div>
+                        <div class="value"><p>BL</p><input type="number" value="0"></div>
+                    </div>
+                    <div class="p">Text</div>
+                    <select class="dropdown">
+                        <option value="Poppins">Poppins</option>
+                        <option value="Poppins">Poppins1</option>
+                        <option value="Poppins">Poppins2</option>
+                        <option value="Poppins">Poppins3</option>
+                    </select>
+                    <div class="div1">
+                        <select class="dropdown">
+                            <option value="Medium">Normal</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Medium">Average</option>
+                        </select>
+                        <select class="dropdown">
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                        </select>
+                    </div>
+                    <div class="div2">
+                        <div class="align">
+                            <button><img src="./img/align1.png" alt></button>
+                            <button><img src="./img/align2.png" alt></button>
+                            <button><img src="./img/align3.png" alt></button>
+                        </div>
+                        <div class="clr">
+                            <input type="color" class="colorPicker" value="#8C9BAA">
+                            <p class="clrdisplay">#8C9BAA</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="spacing">
+                    <div class="para">Spacing</div>
+                    <div class="outline">
+                        <div class="margin">
+                            <div class="p">MARGIN
+                                <input type="number" class="text" placeholder="0">
+                                <input type="number" class="text" placeholder="0">
+                                <input type="number" class="text" placeholder="0">
+                                <input type="number" class="text" placeholder="0">
+                            </div>
+
+                            <div class="padding">
+                                <div class="p">PADDING
+                                    <input type="number" class="text" placeholder="0">
+                                    <input type="number" class="text" placeholder="0">
+                                    <input type="number" class="text" placeholder="0">
+                                    <input type="number" class="text" placeholder="0">
+                                </div>
+                                <div class="ele"><i class="fa fa-lock"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contracts">
+                    <div class="para">Constraints</div>
+                    <div class="ele">
+                        <img src="./img/ele1.png" alt>
+                        <img src="./img/ele2.png" alt>
+                        <img src="./img/ele3.png" alt>
+                        <img src="./img/ele4.png" alt>
+                        <img src="./img/ele5.png" alt>
+                        <img src="./img/ele6.png" alt>
+                        <img src="./img/ele7.png" alt>
+                    </div>
+                    <div class="ele-main">
+                        <img src="./img//constraints.png" alt>
+                    </div>
+                    <div class="ele-main">
+                        <img src="./img/Gap.png" alt>
+                    </div>
+                </div>
+
+                <div class="color">
+                    <div class="para">Selection color</div>
+                    <!-- <select class="dropdown">
+                            <option value="12">#8C9BAA</option>
+                        </select> -->
+                    <div class="clr">
+                        <input type="color" class="colorPicker" value="#8C9BAA">
+                        <p class="clrdisplay">#8C9BAA</p>
+                    </div>
+                    <!-- <select class="dropdown">
+                            <option value="12">#8C9BAA</option>
+                        </select> -->
+ 
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./temp.js"></script>
+    <script>
+        
+        // const div = document.getElementById('div');
+// const treeView = document.getElementById('ul');
+// const rectangle = document.getElementById('rect');
+// const circle = document.getElementById('cir');
+// const group = document.getElementById('grp');
+// const draw = document.getElementById('pen');
+// const text = document.getElementById('text');
+// let canvas=document.getElementById('canvas')
+// const gl = canvas.getContext('2d');
+// // const shapes=[]
+// let shapeIdCounter = 0;
+//     const shapes = [];
+
+//     function getOutput() {
+//         const id = shapes.length; 
+//         const color = 'red';
+//         const x = 600; 
+//         const y = 400; 
+//         const width = 200; 
+//         const height = 100; 
+
+//         // Create a rectangle object
+//         // const rectangle = {
+//         //     id,
+//         //     x,
+//         //     y,
+//         //     width,
+//         //     height,
+//         //     color,
+//         //     type: 'rectangle',
+//         //     isSelected: false 
+//         // };
+//        const circle={
+//         id,
+//             x,
+//             y,
+//             width,
+//             height,
+//             color,
+//             type: 'circle',
+//             isSelected: false 
+//        }
+//         // shapes.push(rectangle); 
+//         shapes.push(circle); 
+//         drawCanvas(); 
+//     }
+
+//     function drawCanvas() {
+//         // Clear the canvas
+//         gl.clearRect(0, 0, canvas.width, canvas.height);
+
+   
+//         shapes.forEach(shape => {
+//             gl.fillStyle = shape.color;
+//             if (shape.type === 'rectangle') {
+//                 gl.fillRect(shape.x, shape.y, shape.width, shape.height);
+//             }
+//             else if(shape.type==='circle'){
+//                 gl.beginPath();
+//         gl.arc(shape.x + shape.width / 2, shape.y + shape.height / 2, shape.width / 2, 0, 2 * Math.PI);
+//         gl.closePath();
+//         gl.fill();
+//             }
+//         });
+//     }
+    </script>
+</body>
+</html>

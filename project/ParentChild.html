@@ -288,6 +288,7 @@
         }
       });
     }
+ 
     document.addEventListener("dragstart", function (event) {
       if (event.target.tagName.toLowerCase() === "li") {
         event.target.style.opacity = 1;
@@ -356,21 +357,21 @@
       scalingCorner = null;
     });
 
-    // treeView.addEventListener('click', (e) => {
-    //   const shapeId = parseInt(e.target.id);
-    //   const selectedShape = shapes.find(shape => shape.id === shapeId);
+    treeView.addEventListener('click', (e) => {
+      const shapeId = parseInt(e.target.id);
+      const selectedShape = shapes.find(shape => shape.id === shapeId);
 
-    //   if (selectedShape) {
-    //     // Clear previous selection
-    //     shapes.forEach(shape => (shape.isSelected = false));
+      if (selectedShape) {
+        // Clear previous selection
+        shapes.forEach(shape => (shape.isSelected = false));
 
-    //     // Mark the selected shape and its children
-    //     markSelectedAndChildren(selectedShape);
+        // Mark the selected shape and its children
+        markSelectedAndChildren(selectedShape);
 
-    //     // Redraw the canvas
-    //     // drawCanvas();
-    //   }
-    // });
+        // Redraw the canvas
+        drawCanvas();
+      }
+    });
 
     function markSelectedAndChildren(shape) {
       // Check if the current shape or its children have already been marked as selected
@@ -442,3 +443,6 @@
 </body>
 
 </html>
+ 
+
+   

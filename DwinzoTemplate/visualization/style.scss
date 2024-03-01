@@ -621,6 +621,20 @@ input::-webkit-inner-spin-button {
 .toggle{
     rotate: 90deg;
 }
+#canvas {
+    background-color: transparent;
+}
+#div {
+    margin-left: 90rem;
+    margin-top: -50rem;
+    padding: 4px;
+    border: 5px solid #000000;
+    overflow-y: scroll;
+    max-height: 900px;
+    position: absolute;
+    width: 300px;
+  }
+
 // ul{
 //     li{
 //         span{
